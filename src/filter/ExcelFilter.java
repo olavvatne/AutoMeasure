@@ -4,7 +4,11 @@ import java.io.File;
 
 import javax.swing.filechooser.FileFilter;
 
-
+/**
+ * Filter for JFileChooser to limit  file allowed  to open (by file extension). Only xls files (Only old excel files).
+ * @author Olav
+ *
+ */
 public class ExcelFilter extends FileFilter {
 
 	@Override

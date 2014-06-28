@@ -1,6 +1,6 @@
 
 
-package view;
+package view.mainPanel;
  
  
 import javax.swing.BorderFactory;

@@ -1,4 +1,4 @@
-package view;
+package view.imageViewer;
 
 import java.awt.AlphaComposite;
 import java.awt.BasicStroke;

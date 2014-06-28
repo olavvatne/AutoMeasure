@@ -1,4 +1,4 @@
-package view;
+package view.imageViewer;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -23,8 +23,14 @@ import javax.swing.SwingWorker;
 
 
 
+
+
 import model.ImageDataModel;
 
+/**
+ * Viewer is the panel that contain the control overlay for the images, threePhasePanel and the imageDataModel that will by manipulated by threephasepanel.
+ * 
+ * */
 public class Viewer extends JPanel {
 	protected ImageDataModel data;
 	protected ThreePhasePanel threePhasePanel;

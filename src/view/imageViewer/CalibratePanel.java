@@ -1,4 +1,4 @@
-package view;
+package view.imageViewer;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;

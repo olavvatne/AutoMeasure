@@ -1,7 +1,6 @@
-package view;
+package view.mainPanel;
 
 import java.awt.BorderLayout;
-
 import java.awt.Dimension;
 import java.awt.Insets;
 import java.awt.Point;
@@ -15,6 +14,8 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.border.EmptyBorder;
 
+import view.imageViewer.MeasurementsPanel;
+import view.imageViewer.Viewer;
 import model.ImageDataModel;
 import model.ImageTableModel;
 

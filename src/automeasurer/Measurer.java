@@ -10,13 +10,14 @@ import java.awt.Toolkit;
 
 
 
+
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
-import view.MainPanel;
+import view.mainPanel.MainPanel;
 
 
 

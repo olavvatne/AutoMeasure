@@ -1,4 +1,4 @@
-package view;
+package view.imageFolderDialog;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;

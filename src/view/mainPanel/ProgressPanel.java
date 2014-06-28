@@ -1,4 +1,4 @@
-package view;
+package view.mainPanel;
 
 import java.awt.BorderLayout;
 import java.beans.PropertyChangeEvent;

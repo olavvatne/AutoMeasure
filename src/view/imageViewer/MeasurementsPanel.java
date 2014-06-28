@@ -1,4 +1,4 @@
-package view;
+package view.imageViewer;
 
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
@@ -17,6 +17,12 @@ import automeasurer.Measurer;
 import model.ImageDataModel;
 import model.ImageTableModel;
 
+/**
+ * Panel to view the image and its measurements, and update them if necessary.
+ * 
+ * @author Olav
+ *
+ */
 public class MeasurementsPanel extends Viewer implements ActionListener {
 	ImageTableModel model;
 	int row;

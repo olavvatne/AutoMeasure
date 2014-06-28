@@ -1,4 +1,4 @@
-package view;
+package view.mainPanel;
 
 
 import java.awt.BorderLayout;
@@ -16,6 +16,10 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
+import view.excelSaveDialog.SaveToExcelFilePanel;
+import view.imageFolderDialog.OpenFoldersPanel;
+import view.imageViewer.CalibratePanel;
+import view.imageViewer.Viewer;
 import model.ImageDataModel;
 import model.ImageTableModel;
 import analyze.Analyzer;
