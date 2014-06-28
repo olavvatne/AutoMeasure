@@ -13,7 +13,16 @@ import model.Status;
 
 import java.awt.Color;
 import java.awt.Component;
- 
+
+/**
+ * ColorRenderer is a cell renderer for JTable. It is responsible for rendering of a cell, and are typically 
+ * applied to a whole column. ColorRenderer take the model, Status enum value and render a rounded rectangle inside the cell.
+ * Red color means that the image analysis was unsuccessful. Green means success, and grey are rows that still haven't been
+ * analysed yet.
+ * 
+ * @author Olav
+ *
+ */
 public class ColorRenderer extends JLabel
                            implements TableCellRenderer {
     Border unselectedBorder = null;

@@ -17,7 +17,7 @@ public class InfoPanel extends JPanel {
 	public InfoPanel() {
 		this.setLayout(new BorderLayout());
 		this.setBorder(new EmptyBorder(10, 10, 10 ,10));
-		JLabel label = new JLabel("lolhei");
+		JLabel label = new JLabel("test");
 		this.add(label, BorderLayout.CENTER);
 	}
 }
