@@ -24,7 +24,9 @@ import analyze.ImageMarkerPoint;
 
 /**
  * The view layer containing all measurement lines, and adjusters
- * @author Olav
+ * 
+ * TODO: A bit logic heavy 
+ *  @author Olav
  *
  */
 public class ThreePhasePanel extends JPanel implements MouseListener, MouseMotionListener {
@@ -89,11 +91,30 @@ public class ThreePhasePanel extends JPanel implements MouseListener, MouseMotio
 		this.windowWidth = w;
 	}
 	
+	/**
+	 * Marker - where the green dot is placed
+	 * Actual marker - Have a value. Typically between 0-20. The percentage is a value describing the percentage
+	 * of the range needed to get to the actual marker.
+	 *  | . . . . . . . . . |. | Range, and acutal marker. 10 percent in this case
+	 *  
+	 *  The getOffset calculate the actual screen pixel offset of the percentage
+	 * @param x1 marker value 1
+	 * @param x2 marker value 2
+	 * @param percentage percentage of the range
+	 * @return
+	 */
 	private double getOffset(double x1, double x2, double percentage) {
 		
 		return ((((x2 - x1)*percentage)/this.imageWidth)*this.windowWidth);
 	}
 	
+	/**
+	 * Depending on the position of the marker in the array , and in the image an offset can be added or subtracted from the value.
+	 * 
+	 * @param i - What marker to return position of.
+	 * @param withOffset If offset should be added.
+	 * @return the value of the marker either with offset or not.
+	 */
 	//Kanskje litt dårlig måte å gjøre det på? med tanke på offset og slik.
 	private double getLinePos(int i, boolean withOffset) {
 		if (i<NR_OF_MARKERS) {
@@ -185,6 +206,14 @@ public class ThreePhasePanel extends JPanel implements MouseListener, MouseMotio
 		}
 	}
 	
+	/**
+	 * The getValue method is used by the label telling the measurement value of the graphical markers.
+	 * 
+	 * @param markerLow - The lower marker of the range
+	 * @param markerHigh - The higher marker of the range.
+	 * @param valueType - OG og OW.
+	 * @return the actual value of the OG/OW seperation
+	 */
 	public double getValue(int markerLow, int markerHigh,  int valueType) {
 		double lineInPixel = getLinePos(markerHigh, true) -getLinePos(markerLow, true);
 		double lineInValue = getLineValue(markerHigh) - getLineValue(markerLow);

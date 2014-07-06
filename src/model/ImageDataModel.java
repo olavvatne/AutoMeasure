@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 
 import utilities.ExcelModel;
+import utilities.Measurement;
 import analyze.ImageMarkerPoint;
 
 /**
@@ -19,8 +20,16 @@ import analyze.ImageMarkerPoint;
  *
  */
 public class ImageDataModel implements ExcelModel {
+	public static final int OG_VALUE = 0;
+	public static final int OW_VALUE = 1;
 	
-	public static double[] offset = new double[]{0.10, 0.10, 0.10, 0.1};
+	public static final int OW_HIGH = 3;
+	public static final int OW_LOW = 2;
+	public static final int OG_HIGH = 0;
+	public static final int OG_LOW = 1;
+	
+	public static double[] offset = new double[]{0.10, 0.10, 0.10, 0.10};
+	private static double[] markerValue = new double[]{18, 1, 1, 18}; //finn en måte å generaliser denne og!
 	private Status status;
 	private Date date;
 	private List<ImageMarkerPoint> markers;
@@ -96,14 +105,14 @@ public class ImageDataModel implements ExcelModel {
 
 
 	public double[] getValues() {
-		return values;
+		return this.values;
 	}
 
 
 	public void setValues(double[] values) {
 		this.values = values;
 	}
-
+	
 	//for tablemodel
 	public Object get(int i) {
 		switch(i) {
@@ -142,6 +151,17 @@ public class ImageDataModel implements ExcelModel {
 		}
 	}
 	
+	public double[] getMeasurementValues() {
+		if (status == Status.SUCCESS && isMarkersValid()) {
+			Measurement valueCalculator = Measurement.calculator();
+			valueCalculator.setCalculator(offset, markerValue, markers, values);
+			return new double[]{valueCalculator.getThreePhaseValue(OW_VALUE), valueCalculator.getThreePhaseValue(OG_VALUE)};
+		}
+		else {
+			return new double[]{-1, -1};
+		}
+	}
+	
 	
 	public Date getDate() {
 		return date;
@@ -159,6 +179,7 @@ public class ImageDataModel implements ExcelModel {
 	//Excel model required method for writing.
 	@Override
 	public String[] getRowAsStringRow() {
-		return new String[]{this.date.toString()+ "", this.values[0] +"", this.values[1] + ""};
+		double[] values = this.getMeasurementValues();
+		return new String[]{this.date.toString()+ "", values[0] +"", values[1] + ""};
 	}
 }

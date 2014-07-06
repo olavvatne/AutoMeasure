@@ -12,6 +12,7 @@ import java.util.List;
 
 import javax.swing.table.AbstractTableModel;
 
+import utilities.ExcelModel;
 import analyze.ImageMarkerPoint;
 import automeasurer.Measurer;
 
@@ -133,6 +134,14 @@ public class ImageTableModel extends AbstractTableModel implements PropertyChang
 			return null;
 		}
 		
+	}
+	
+	/**
+	 * TODO: Check if there are better ways to do this, even though we know that list will not contain any other objects than objecs with ExcelModel interface.
+	 * @return List of excelModel compatible objects.
+	 */
+	public List<ExcelModel> getDataModel() {
+		return (List<ExcelModel>)(Object)this.data;
 	}
 	
 	

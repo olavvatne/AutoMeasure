@@ -27,13 +27,15 @@ public class ExcelWriter {
 	/**
 	 * A new file has to be created, and inserted when initializing an ExcelWriter.
 	 * 
-	 * NOTE: NO date placement yet
+	 * TODO: NO date placement yet
+	 * TODO: throw expections, and not handle here. Should be handled by view. Show text or something.
 	 * @param excelFileWithDates 
 	 */
 	public ExcelWriter(File file) {
 		try {
 			workbook =Workbook.createWorkbook(file);
-			sheet = workbook.getSheet(FIRST_EXCEL_SHEET);
+			sheet = workbook.createSheet("data", FIRST_EXCEL_SHEET);
+			//sheet = workbook.getSheet(FIRST_EXCEL_SHEET);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -51,10 +53,10 @@ public class ExcelWriter {
 		for(int row = 0; row<data.size(); row++) {
 			String[] values = data.get(row).getRowAsStringRow();
 			for(int column = 0; column<values.length; column++) {
-				this.setCell(row, column, values[column]);
+				this.setCell(column, row,  values[column]);
 			}
 		}
-		
+		closeAndWriteExcel();
 	}
 	
 	/**

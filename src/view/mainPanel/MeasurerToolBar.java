@@ -13,7 +13,13 @@ import javax.swing.JToolBar;
 import javax.swing.border.EmptyBorder;
 
 import automeasurer.Measurer;
-
+/**
+ * The toolbar of this application. Contain several icons buttons that will typically open a view.
+ * The button events are not handled here, it is instead handled by the ActionListner (MainPanel).
+ * 
+ * @author Olav
+ *
+ */
 public class MeasurerToolBar extends JToolBar {
 
 	public MeasurerToolBar(ActionListener listener) {

@@ -18,7 +18,12 @@ import view.imageViewer.MeasurementsPanel;
 import view.imageViewer.Viewer;
 import model.ImageDataModel;
 import model.ImageTableModel;
-
+/**
+ * JPanel for displaying table inside a scroll window, containing a row for each image.
+ * 
+ * @author Olav
+ *
+ */
 public class ImageTablePanel extends JPanel implements MouseListener {
 	private ImageTableModel model;
 	private JTable imageTable;
