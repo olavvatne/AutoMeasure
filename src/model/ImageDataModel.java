@@ -1,5 +1,6 @@
 package model;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -176,10 +177,21 @@ public class ImageDataModel implements ExcelModel {
 		this.markers = list;
 		
 	}
+	
+	//Used for excel stuff. Maybe make it more general. F.ex the interface for excelModel interface has getter for date etc
+	//values, and the excelwriter decide how its written using some rules.
+	private String getFormattedDate() {
+		SimpleDateFormat dtf = new SimpleDateFormat("dd/MM/yy");
+		return dtf.format(this.date);
+	}
+	private String getFormattedTime() {
+		SimpleDateFormat dtf = new SimpleDateFormat("hh:mm:ss");
+		return dtf.format(this.date);
+	}
 	//Excel model required method for writing.
 	@Override
 	public String[] getRowAsStringRow() {
 		double[] values = this.getMeasurementValues();
-		return new String[]{this.date.toString()+ "", values[0] +"", values[1] + ""};
+		return new String[]{getFormattedDate(), getFormattedTime(), values[0] +"", values[1] + ""};
 	}
 }
