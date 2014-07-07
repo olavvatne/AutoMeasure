@@ -4,7 +4,11 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Insets;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.net.URL;
+import java.util.HashMap;
 
 import javax.swing.Box;
 import javax.swing.ImageIcon;
@@ -21,7 +25,12 @@ import automeasurer.Measurer;
  *
  */
 public class MeasurerToolBar extends JToolBar {
-
+	private static final int HOVER_IMG = 1;
+	private static final int CLICK_IMG = 2;
+	private static final int NORMAL_IMG = 0;
+	
+	HashMap<JButton, String[]> map = new HashMap<JButton, String[]>();
+	
 	public MeasurerToolBar(ActionListener listener) {
 		
 		this.setFloatable(false);
@@ -31,17 +40,21 @@ public class MeasurerToolBar extends JToolBar {
 	private void addButtons(ActionListener listener) {
 		JButton button = null;
 		this.add(Box.createHorizontalStrut(10));
-		button = makeToolBarButton("open2", Measurer.OPEN, "åpne bildemappe", "åpne", listener);
+		button = makeToolBarButton("/open.png", Measurer.OPEN, "åpne bildemappe", "åpne", listener);
+		map.put(button, new String[]{"/open.png", "/openhover.png", "/openClick.png"});
 		this.add(button);
 		this.add(Box.createHorizontalStrut(10));
-		button = makeToolBarButton("save2", Measurer.SAVE, "lagre til excel", "Lagre", listener);
+		button = makeToolBarButton("/save.png", Measurer.SAVE, "lagre til excel", "Lagre", listener);
+		map.put(button, new String[]{"/save.png", "/saveHover.png", "/saveClick.png"});
 		button.setEnabled(false);
 		this.add(button);
 		this.add( Box.createHorizontalGlue() );
-		button = makeToolBarButton("calibrate2", Measurer.CALIBRATE, "kalibrer", "Kalibrer", listener);
+		button = makeToolBarButton("/calibrate.png", Measurer.CALIBRATE, "kalibrer", "Kalibrer", listener);
+		map.put(button, new String[]{"/calibrate.png", "/calibratehover.png", "/calibrateClick.png"});
 		this.add(button);
 		button.setEnabled(false);
-		button = makeToolBarButton("analyze2", Measurer.ANALYZE, "kjør analysering", "analyser", listener);
+		button = makeToolBarButton("/analyze.png", Measurer.ANALYZE, "kjør analysering", "analyser", listener);
+		map.put(button, new String[]{"/analyze.png", "/analyzehover.png", "/analyzeClick.png"});
 		button.setEnabled(false);
 		this.add(button);
 		this.add(Box.createHorizontalStrut(10));
@@ -62,11 +75,8 @@ public class MeasurerToolBar extends JToolBar {
 			String toolTipText,
 			String altText,
 			ActionListener listener) {
-		//Look for the image.
-		String imgLocation = "/"
-				+ imageName
-				+ ".png";
-		URL imageURL = Measurer.class.getResource(imgLocation);
+		
+		
 
 		//Create and initialize the button.
 		JButton button = new JButton();
@@ -75,7 +85,47 @@ public class MeasurerToolBar extends JToolBar {
 		button.setToolTipText(toolTipText);
 		button.addActionListener(listener);
 		
+		setIconForButton(button, imageName, altText);	
+		button.addMouseListener(new MouseListener() {
+			public void mouseEntered(MouseEvent e) {
+		        JButton button = (JButton)e.getSource();
+		        setIconForButton(button, map.get(button)[HOVER_IMG], "test");
+		    }
 
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void mouseExited(MouseEvent e) {
+				 JButton button = (JButton)e.getSource();
+			     setIconForButton(button, map.get(button)[NORMAL_IMG], "test");
+				
+			}
+
+			@Override
+			public void mousePressed(MouseEvent e) {
+				JButton button = (JButton)e.getSource();
+		        setIconForButton(button, map.get(button)[CLICK_IMG], "test");
+				
+			}
+
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				JButton button = (JButton)e.getSource();
+		        setIconForButton(button, map.get(button)[NORMAL_IMG], "test");
+				
+			}
+		});
+		
+		return button;
+	}
+	
+	public void setIconForButton(JButton button, String imgLocation, String altText) {
+		URL imageURL = Measurer.class.getResource(imgLocation);
+		
 		if (imageURL != null) {                      //image found
 			button.setIcon(new ImageIcon(imageURL, altText));
 		} else {                                     //no image found
@@ -83,7 +133,9 @@ public class MeasurerToolBar extends JToolBar {
 			System.err.println("Resource not found: "
 					+ imgLocation);
 		}
-		
-		return button;
 	}
+	
+	
+
+
 }
