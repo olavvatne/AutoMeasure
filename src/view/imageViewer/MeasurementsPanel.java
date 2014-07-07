@@ -3,6 +3,8 @@ package view.imageViewer;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.util.List;
 
 import javax.swing.Box;
@@ -23,7 +25,7 @@ import model.ImageTableModel;
  * @author Olav
  *
  */
-public class MeasurementsPanel extends Viewer implements ActionListener {
+public class MeasurementsPanel extends Viewer implements ActionListener, KeyListener {
 	ImageTableModel model;
 	int row;
 	//finn bedre måte med refactorering
@@ -36,6 +38,7 @@ public class MeasurementsPanel extends Viewer implements ActionListener {
         toolBar.setFloatable(false);
         toolBar.setRollover(true);
         add(toolBar, BorderLayout.PAGE_START);
+        this.addKeyListener(this);
 	}
 	
 	
@@ -60,14 +63,47 @@ public class MeasurementsPanel extends Viewer implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		String cmd = e.getActionCommand();
+		iterateModel(cmd);
+		System.out.println("AREA: " + this.data.markerArea(3));
+	}
+	
+	private void iterateModel(String cmd) {
 		if (Measurer.NEXT.equals(cmd)) {
-			row ++;	
-			this.setModel(this.model.getDataModel(row));
+			if(this.model.getRowCount() > row+1) {
+				row ++;	
+				this.setModel(this.model.getDataModel(row));
+			}
 		}
 		else if (Measurer.PREVIOUS.equals(cmd) ) {
-			row --;
-			this.setModel(this.model.getDataModel(row));
+			if(row-1 >= 0) {
+				row --;
+				this.setModel(this.model.getDataModel(row));
+			}
 		}
-		System.out.println("AREA: " + this.data.markerArea(3));
+	}
+
+	@Override
+	public void keyPressed(KeyEvent e) {
+		if(e.getKeyCode() == KeyEvent.VK_LEFT) {
+			iterateModel(Measurer.NEXT);
+		}
+		else if(e.getKeyCode() == KeyEvent.VK_RIGHT) {
+			iterateModel(Measurer.PREVIOUS);
+		}
+		
+	}
+
+
+	@Override
+	public void keyReleased(KeyEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public void keyTyped(KeyEvent e) {
+		// TODO Auto-generated method stub
+		
 	}
 }

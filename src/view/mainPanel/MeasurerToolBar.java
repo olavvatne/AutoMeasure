@@ -31,17 +31,17 @@ public class MeasurerToolBar extends JToolBar {
 	private void addButtons(ActionListener listener) {
 		JButton button = null;
 		this.add(Box.createHorizontalStrut(10));
-		button = makeToolBarButton("open", Measurer.OPEN, "åpne bildemappe", "åpne", listener);
+		button = makeToolBarButton("open2", Measurer.OPEN, "åpne bildemappe", "åpne", listener);
 		this.add(button);
 		this.add(Box.createHorizontalStrut(10));
-		button = makeToolBarButton("write", Measurer.SAVE, "lagre til excel", "Lagre", listener);
+		button = makeToolBarButton("save2", Measurer.SAVE, "lagre til excel", "Lagre", listener);
 		button.setEnabled(false);
 		this.add(button);
 		this.add( Box.createHorizontalGlue() );
-		button = makeToolBarButton("calibrate", Measurer.CALIBRATE, "kalibrer", "Kalibrer", listener);
+		button = makeToolBarButton("calibrate2", Measurer.CALIBRATE, "kalibrer", "Kalibrer", listener);
 		this.add(button);
 		button.setEnabled(false);
-		button = makeToolBarButton("analyze", Measurer.ANALYZE, "kjør analysering", "analyser", listener);
+		button = makeToolBarButton("analyze2", Measurer.ANALYZE, "kjør analysering", "analyser", listener);
 		button.setEnabled(false);
 		this.add(button);
 		this.add(Box.createHorizontalStrut(10));
