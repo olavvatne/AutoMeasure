@@ -2,6 +2,8 @@ package utilities;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import jxl.Workbook;
@@ -20,9 +22,17 @@ public class ExcelWriter {
 	public static int WO_COLUMN =3;
 	
 	private static int FIRST_EXCEL_SHEET = 0;
+	private static int EQUAL_VALUES = 0;
+	private static int FIRST_VALUE_LESS =-1;
 	
 	WritableSheet sheet = null;
 	WritableWorkbook workbook = null;
+	private String dateRegex = "dd/MM/yy hh:mm:ss";
+	//settings maybe
+	private int dateColumn = DATE_COLUMN;
+	private int timeColumn = TIME_COLUMN;
+	//If file contains dates, matching between image and excel date can be performed
+	boolean fileContainDates = false;
 	
 	/**
 	 * A new file has to be created, and inserted when initializing an ExcelWriter.
@@ -31,34 +41,149 @@ public class ExcelWriter {
 	 * TODO: throw expections, and not handle here. Should be handled by view. Show text or something.
 	 * @param excelFileWithDates 
 	 */
-	public ExcelWriter(File file) {
-		try {
-			workbook =Workbook.createWorkbook(file);
-			sheet = workbook.createSheet("data", FIRST_EXCEL_SHEET);
-			//sheet = workbook.getSheet(FIRST_EXCEL_SHEET);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}			
+	public ExcelWriter(File file, boolean newFile) {
+		if(newFile) {
+			try {
+				workbook =Workbook.createWorkbook(file);
+				sheet = workbook.createSheet("data", FIRST_EXCEL_SHEET);
+				//sheet = workbook.getSheet(FIRST_EXCEL_SHEET);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}			
+		}
+		else {
+			fileContainDates = true;
+			File copyFile = findSavePath(file, newFile);
+			try {
+				Workbook originalWorkbook =Workbook.getWorkbook(file);
+				workbook = Workbook.createWorkbook(copyFile, originalWorkbook);
+				sheet = workbook.getSheet(FIRST_EXCEL_SHEET);
+				System.out.println(sheet.getCell(0, 0).getContents());
+			} catch (BiffException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 	}
 	
 	/**
 	 * Write the List of data to an excel file. Data written is dependent on the 
 	 * implementation of the ExcelModel in each data model.
-	 * @param List of ojects implementing ExcelModel interface
+	 * @param List of objects implementing ExcelModel interface
 	 * 
 	 */
 	public void writeExcelFile(List<ExcelModel> data) {
+		if(this.fileContainDates) {
+			writeToFileWithDates(data);
+		}
+		else {
+			writeToFileWithNoDates(data);
+		}
+		closeAndWriteExcel();
+	}
+	
+	/**
+	 * Opening a already existing excel file with dates, will require matching
+	 * of dates. The excelfile will often contain a huge amount of dates, and there is more often than not
+	 * few image measurements. The excel file therefore has to be read sequentially to map excel date to measurements.
+	 * 
+	 * NOTE: THe method assumes that the excelModel list is sorted in chronological order. 
+	 * 
+	 * @param data List of objects implementing ExcelModel interface.
+	 */
+	private void writeToFileWithDates(List<ExcelModel> data) {
+		int excelIndex = 0;
+		int excelLength = sheet.getRows();
 		
+		for(ExcelModel measurement: data) {
+			Date measurementDate = measurement.getDate();
+			int i;
+			boolean ImageDateBefore = false;
+			boolean noDateForImage = false;
+			
+			System.out.println(measurementDate.toLocaleString());
+			System.out.println("MEASUREMENTDATE");
+			for(i= excelIndex; i<excelLength; i++ ) {
+				Date excelDate = getDate(i);
+				int compareResult = DateUtil.compareDate(measurementDate, excelDate);
+				if(compareResult == EQUAL_VALUES) {
+					System.out.println("EQUAL");
+					
+					//Method for date added, but also for values only, to avoid magic numbers
+					setValueCells(measurement.getRowAsStringRow(), i);
+					break;
+				}
+				else if(compareResult == FIRST_VALUE_LESS) {
+					System.out.println("Measure og så excel havnet i <");
+					System.out.println(excelDate.toLocaleString());
+					System.out.println(measurementDate.toLocaleString());
+					//Think this is when measurementDate begins before excelDate. Important for when
+					//excelIndex == 0 and measurement is before exceldate
+					if(excelIndex == 0) {
+						//the exceldate can be close, but better to skip it!
+						noDateForImage = true;
+						break;
+					}
+					ImageDateBefore = true;
+				}
+				else {
+					//System.out.println("measurement date bigger than excelDate");
+					if(ImageDateBefore) {
+						//Image date is inbetween two excel dates
+						//TODO: (Set to the value after always.) is TEMP
+						//Should have a comparison of i and i-1 (if possible)
+						setValueCells(measurement.getRowAsStringRow(), i);
+						break;
+					}
+					else {
+						System.out.println("I ELSEN");
+						System.out.println(excelDate.toLocaleString());
+						System.out.println(measurementDate.toLocaleString());
+					}
+				}
+			}
+			if(noDateForImage) {
+				break;
+			}
+			excelIndex = i;
+		}
+	}
+	
+	private void setValueCells(String[] values, int row) {
+		for(int column = 2; column<values.length; column++) {
+			this.setCell(column, row,  values[column]);
+		}
+	}
+	
+	private Date getDate(int row) {
+		String date = sheet.getWritableCell(dateColumn, row).getContents().trim();
+		String time = sheet.getWritableCell(timeColumn, row).getContents().trim();
+		String datetime = date + " " + time;
+		
+		try {
+			return new SimpleDateFormat(this.dateRegex).parse(datetime);
+		} catch (Exception e) {
+			return null;
+		}
+	}
+	/**
+	 * If Excelwriter has created a new xls file there is no dates present in the row A and B.
+	 * Matching image dates and excel dates is not necessary. Date and value is written
+	 * sequentially below each other in the excel file.
+	 * @param data List of objects implementing ExcelModel interface
+	 */
+	private void writeToFileWithNoDates(List<ExcelModel> data) {
 		for(int row = 0; row<data.size(); row++) {
 			String[] values = data.get(row).getRowAsStringRow();
 			for(int column = 0; column<values.length; column++) {
 				this.setCell(column, row,  values[column]);
 			}
 		}
-		closeAndWriteExcel();
 	}
-	
 	/**
 	 * Method should be called after finishing writing to the excel sheet.
 	 * Workbook is also closed, like regular IO operations
@@ -99,4 +224,23 @@ public class ExcelWriter {
 		return true;
 	}
 	
+	private static File findSavePath(File excelFile, boolean newFile) {
+		String copyString = "- copy";
+		String postfix = ".xls";
+		
+		if(newFile) {
+			copyString = "";
+			postfix = "";
+		}
+		int initialFileLength = excelFile.getName().length();
+		int copyInt = 0;
+		File copyFile;
+		do {
+			copyInt ++;
+			copyFile = new File(excelFile.getParentFile().getAbsolutePath() + "\\"+
+					excelFile.getName().substring(0, initialFileLength) + copyString+ copyInt+ ".xls");
+		} while(copyFile.exists());
+
+		return copyFile;
+	}
 }

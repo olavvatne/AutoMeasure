@@ -38,19 +38,16 @@ public class SaveToExcelFilePanel extends JPanel implements ActionListener {
 		
 		int returnVal = fc.showSaveDialog(this);
 		if (returnVal == JFileChooser.APPROVE_OPTION) {
-			/**file = new File( fc.getSelectedFile( ) + ".xls" );
-			if(file == null)
-		        return;
-			if(file.exists())
-		    {
-				returnVal = JOptionPane.showConfirmDialog(this,
-		                           "Replace existing file?");
-		        // may need to check for cancel option as well
-		        if (returnVal == JOptionPane.NO_OPTION)
-		            return;
-		    }*/
 			file = fc.getSelectedFile();
-			ExcelWriter writer = new ExcelWriter(file);
+			boolean newFile = true;
+			if(file.exists()) {
+				newFile = false;
+			}
+			/*returnVal = JOptionPane.showConfirmDialog(this,
+                    "Pressing yes will save the measurements");
+			if (returnVal == JOptionPane.NO_OPTION)
+	            return;*/
+			ExcelWriter writer = new ExcelWriter(file, newFile);
 			writer.writeExcelFile(this.model);
 		}
 	}

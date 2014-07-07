@@ -179,7 +179,7 @@ public class ImageDataModel implements ExcelModel {
 	}
 	
 	//Used for excel stuff. Maybe make it more general. F.ex the interface for excelModel interface has getter for date etc
-	//values, and the excelwriter decide how its written using some rules.
+	//values, and the excelwriter decide how its written using some rules.	
 	private String getFormattedDate() {
 		SimpleDateFormat dtf = new SimpleDateFormat("dd/MM/yy");
 		return dtf.format(this.date);
