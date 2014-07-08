@@ -54,7 +54,10 @@ public class ImageDataModel implements ExcelModel {
 		return status;
 	}
 	public double markerArea(int i) {
-		return this.markers.get(i).getArea();
+		if(markers != null && i< markers.size()) {
+			return this.markers.get(i).getArea();
+		}
+		return -1;
 	}
 
 	public void setStatus(Status status) {
@@ -74,20 +77,20 @@ public class ImageDataModel implements ExcelModel {
 		}
 	}
 	public double getMarkerXPosition(int i) {
-		if(i< markers.size()) {
+		if(markers != null && i< markers.size()) {
 			return this.markers.get(i).getX();
 		}
 		return -1;
 	}
 	
 	public void setMarkerXPosition(int i, double x) {
-		if (i< markers.size()) {
+		if (markers != null &&  i< markers.size()) {
 			this.markers.get(i).setX(x);
 		}
 	}
 	
 	public double getValuesXPosition(int i) {
-		if (i< values.length) {
+		if (markers != null &&  i< values.length) {
 			return this.values[i];
 		}
 		return -1;
