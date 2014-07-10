@@ -56,7 +56,7 @@ public class ThreePhasePanel extends JPanel implements MouseListener, MouseMotio
 	private ImageDataModel model;
 	private int  windowWidth;
 	private int imageWidth;
-	private List<Double> markerValue = MarkerValue.getMarkerValues(model.getId());
+	private List<Double> markerValue;
 	private boolean[] isValueLineSelected = new boolean[2];
 	private int selected = NO_SELECTION;
 	
@@ -64,8 +64,8 @@ public class ThreePhasePanel extends JPanel implements MouseListener, MouseMotio
 		
 		this.windowWidth = (int)Toolkit.getDefaultToolkit().getScreenSize().getWidth();
 		this.imageWidth = imgWidth;
-
 		
+		markerValue = MarkerValue.getMarkerValues(data.getId());
 		if(data.isMarkersValid()) {
 			this.model = data;
 			setValueLinesSelected(true);
@@ -85,6 +85,7 @@ public class ThreePhasePanel extends JPanel implements MouseListener, MouseMotio
 	
 	public void setData(ImageDataModel model) {
 		this.model = model;
+		markerValue = MarkerValue.getMarkerValues(model.getId());
 		this.repaint();
 	}
 	

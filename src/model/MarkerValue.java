@@ -17,17 +17,18 @@ private static List<IntervalModel<Double>> markerValues = init();
 	 * 
 	 * @return A linked list of IntervalModels
 	 */
-	private static List<IntervalModel<Double>> init() {
+	public static List<IntervalModel<Double>> init() {
 		//get some default values from store or something
-		markerValues = new LinkedList<IntervalModel<Double>>();
+		List<IntervalModel<Double>> intervalList = new LinkedList<IntervalModel<Double>>();
 		List<Double> values = new ArrayList<Double>();
 			values.add(18.0);
 			values.add(1.0);
 			values.add(1.0);
 			values.add(18.0);
 		IntervalModel<Double> initialMarkerValue = new IntervalModel<Double>(0, values, Integer.MAX_VALUE);
-		markerValues.add(initialMarkerValue);
-		return values;
+		intervalList.add(initialMarkerValue);
+		System.out.println("tester");
+		return intervalList;
 	}
 	
 	
@@ -40,6 +41,8 @@ private static List<IntervalModel<Double>> markerValues = init();
 	public static List<Double> getMarkerValues(int row) {
 		//could probably use hashmap to more efficently find offsets but for now, good enough
 		//TODO: do it using hashmaps
+		System.out.println(markerValues);
+		System.out.println("I MARKER");
 		for (int i = 0; i<markerValues.size(); i++) {
 			if(row >= markerValues.get(i).getStartRow() && row <= markerValues.get(i).getEndRow()) {
 				return markerValues.get(i).getValues();

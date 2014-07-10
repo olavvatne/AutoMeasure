@@ -19,14 +19,15 @@ public class Offset {
 	 */
 	private static List<IntervalModel<Double>> init() {
 		//get some default values from store or something
-		offset = new LinkedList<IntervalModel<Double>>();
+		List<IntervalModel<Double>> intervalList = new LinkedList<IntervalModel<Double>>();
 		List<Double> values = new ArrayList<Double>();
 			values.add(0.10);
 			values.add(0.10);
 			values.add(0.10);
 			values.add(0.10);
 		IntervalModel<Double> initialOffset = new IntervalModel<Double>(0, values, Integer.MAX_VALUE);
-		return values;
+		intervalList.add(initialOffset);
+		return intervalList;
 	}
 	
 	
