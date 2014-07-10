@@ -32,7 +32,7 @@ public class IntervalModel<T> {
 		setEndRow(end);
 	}
 	
-	private void setStartRow(int startRow) {
+	public void setStartRow(int startRow) {
 		this.startRow = startRow;
 	}
 
@@ -40,7 +40,7 @@ public class IntervalModel<T> {
 		return endRow;
 	}
 
-	private void setEndRow(int endRow) {
+	public void setEndRow(int endRow) {
 		this.endRow = endRow;
 	}
 

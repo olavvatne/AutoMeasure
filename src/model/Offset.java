@@ -17,7 +17,7 @@ public class Offset {
 	 * 
 	 * @return A linked list of IntervalModels
 	 */
-	public static List<IntervalModel<Double>> init() {
+	private static List<IntervalModel<Double>> init() {
 		//get some default values from store or something
 		offset = new LinkedList<IntervalModel<Double>>();
 		List<Double> values = new ArrayList<Double>();
@@ -41,7 +41,7 @@ public class Offset {
 		//could probably use hashmap to more efficently find offsets but for now, good enough
 		//TODO: do it using hashmaps
 		for (int i = 0; i<offset.size(); i++) {
-			if(row >= offset.get(i).getStartRow() && row<=offset.get(i).getEndRow()) {
+			if(row >= offset.get(i).getStartRow() && row <= offset.get(i).getEndRow()) {
 				return offset.get(i).getValues();
 			}
 		}
@@ -55,6 +55,25 @@ public class Offset {
 	 * @param replaceAllValuesToEnd If the method should replace all intervalModels to the end of the linked list.
 	 */
 	public static void changeOffset(int fromRow, List<Double> newValues, boolean replaceAllValuesToEnd) {
+		int offsetNr = 0;
+		for (int i = 0; i<offset.size(); i++) {
+			if(fromRow >= offset.get(i).getStartRow() && fromRow <= offset.get(i).getEndRow()) {
+				offsetNr = i;
+				break;
+			}
+		}
+		//TODO:Endrow behavior
+		//If fromRow is 0 the inital row has to be replaced.
+		if(fromRow == offset.get(offsetNr).getStartRow()) {
+			IntervalModel<Double> newInterval = new IntervalModel<Double>(fromRow, newValues, offset.get(offsetNr).getEndRow());
+			((LinkedList<IntervalModel<Double>>)offset).set(offsetNr, newInterval);
+		}
+		else {
+			IntervalModel<Double> newInterval = new IntervalModel<Double>(fromRow, newValues, offset.get(offsetNr).getEndRow());
+			offset.get(offsetNr).setEndRow(fromRow-1);
+			((LinkedList<IntervalModel<Double>>)offset).addLast(newInterval);
+		}
+		//if fromRow is bigger than one it can be partitioned
 		
 	}
 }
