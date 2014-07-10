@@ -42,7 +42,7 @@ public class Offset {
 		//TODO: do it using hashmaps
 		for (int i = 0; i<offset.size(); i++) {
 			if(row >= offset.get(i).getStartRow() && row <= offset.get(i).getEndRow()) {
-				return offset.get(i).getValues();
+				return copy(offset.get(i).getValues());
 			}
 		}
 		return null;
@@ -75,5 +75,13 @@ public class Offset {
 		}
 		//if fromRow is bigger than one it can be partitioned
 		
+	}
+	
+	public static List<Double> copy(List<Double> org) {
+		List<Double> copy = new ArrayList<Double>();
+		for(Double val: org) {
+			copy.add(val +0);
+		}
+		return copy;
 	}
 }

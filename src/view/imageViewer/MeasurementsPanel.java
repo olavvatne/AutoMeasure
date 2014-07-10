@@ -70,12 +70,14 @@ public class MeasurementsPanel extends Viewer implements ActionListener, KeyList
 	private void iterateModel(String cmd) {
 		if (Measurer.NEXT.equals(cmd)) {
 			if(this.model.getRowCount() > row+1) {
+				this.threePhasePanel.close();
 				row ++;	
 				this.setModel(this.model.getDataModel(row));
 			}
 		}
 		else if (Measurer.PREVIOUS.equals(cmd) ) {
 			if(row-1 >= 0) {
+				this.threePhasePanel.close();
 				row --;
 				this.setModel(this.model.getDataModel(row));
 			}

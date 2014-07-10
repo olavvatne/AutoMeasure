@@ -19,6 +19,7 @@ import javax.swing.JPanel;
 
 import model.ImageDataModel;
 import model.MarkerValue;
+import model.Offset;
 import analyze.ImageMarkerPoint;
 
 
@@ -57,8 +58,10 @@ public class ThreePhasePanel extends JPanel implements MouseListener, MouseMotio
 	private int  windowWidth;
 	private int imageWidth;
 	private List<Double> markerValue;
+	private List<Double> offset;
 	private boolean[] isValueLineSelected = new boolean[2];
 	private int selected = NO_SELECTION;
+	private boolean isOffsetDirty = false;
 	
 	public ThreePhasePanel(ImageDataModel data, int imgWidth) {
 		
@@ -66,6 +69,7 @@ public class ThreePhasePanel extends JPanel implements MouseListener, MouseMotio
 		this.imageWidth = imgWidth;
 		
 		markerValue = MarkerValue.getMarkerValues(data.getId());
+		offset = Offset.getOffset(data.getId());
 		if(data.isMarkersValid()) {
 			this.model = data;
 			setValueLinesSelected(true);
@@ -86,6 +90,7 @@ public class ThreePhasePanel extends JPanel implements MouseListener, MouseMotio
 	public void setData(ImageDataModel model) {
 		this.model = model;
 		markerValue = MarkerValue.getMarkerValues(model.getId());
+		offset = Offset.getOffset(model.getId());
 		this.repaint();
 	}
 	
@@ -123,11 +128,11 @@ public class ThreePhasePanel extends JPanel implements MouseListener, MouseMotio
 			if (withOffset) {
 				if (i%2== 0) {
 					return ((this.model.getMarkerXPosition(i)/this.imageWidth)*this.windowWidth) 
-							+getOffset(model.getMarkerXPosition(i), model.getMarkerXPosition(i+1), ImageDataModel.offset[i]);
+							+getOffset(model.getMarkerXPosition(i), model.getMarkerXPosition(i+1), this.offset.get(i));
 				}
 				else {
 					return ((this.model.getMarkerXPosition(i)/this.imageWidth)*this.windowWidth) -
-							getOffset(model.getMarkerXPosition(i-1), model.getMarkerXPosition(i), ImageDataModel.offset[i]);
+							getOffset(model.getMarkerXPosition(i-1), model.getMarkerXPosition(i), this.offset.get(i));
 				}
 				
 			}
@@ -143,11 +148,11 @@ public class ThreePhasePanel extends JPanel implements MouseListener, MouseMotio
 		if (i<NR_OF_MARKERS) {
 			if (withOffset) {
 				if (i%2== 0) {
-					double offset = getOffset(model.getMarkerXPosition(i), model.getMarkerXPosition(i+1), ImageDataModel.offset[i]);
+					double offset = getOffset(model.getMarkerXPosition(i), model.getMarkerXPosition(i+1), this.offset.get(i));
 					this.model.setMarkerXPosition(i, ((value / this.windowWidth) * this.imageWidth) - offset);
 				}
 				else {
-					double offset = getOffset(model.getMarkerXPosition(i-1), model.getMarkerXPosition(i), ImageDataModel.offset[i]);
+					double offset = getOffset(model.getMarkerXPosition(i-1), model.getMarkerXPosition(i), this.offset.get(i));
 					this.model.setMarkerXPosition(i, ((value / this.windowWidth) * this.imageWidth) + offset);
 				}
 				
@@ -337,7 +342,10 @@ public class ThreePhasePanel extends JPanel implements MouseListener, MouseMotio
 				this.setLinePos(selected, e.getX(), false);
 			}
 			else {
-				ImageDataModel.offset[selected-NR_OF_MARKERS] = getNewPercentage(selected, e.getX());
+				//TODO: Store new offset on window close etc
+				this.offset.set(selected-NR_OF_MARKERS, getNewPercentage(selected, e.getX()));
+				//ImageDataModel.offset[selected-NR_OF_MARKERS] = getNewPercentage(selected, e.getX());
+				isOffsetDirty = true;
 			}
 			selected = NO_SELECTION;
 			
@@ -355,8 +363,9 @@ public class ThreePhasePanel extends JPanel implements MouseListener, MouseMotio
 				this.setLinePos(selected, e.getX(), false);
 			}
 			else {
-				
-				ImageDataModel.offset[selected-NR_OF_MARKERS] = getNewPercentage(selected, e.getX());
+				//TODO: Store new offset on window close etc
+				this.offset.set(selected-NR_OF_MARKERS, getNewPercentage(selected, e.getX()));
+				//ImageDataModel.offset[selected-NR_OF_MARKERS] = getNewPercentage(selected, e.getX());
 			}
 			
 			
@@ -390,6 +399,12 @@ public class ThreePhasePanel extends JPanel implements MouseListener, MouseMotio
 			return Math.abs((pos-x1)/(x1-x2));
 			
 		}	
-	}	
+	}
+	
+	public void close() {
+		if(isOffsetDirty) {
+			Offset.changeOffset(this.model.getId(), this.offset, true);
+		}
+	}
 }
 
