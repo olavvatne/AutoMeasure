@@ -29,14 +29,15 @@ public class ImageDataModel implements ExcelModel {
 	public static final int OG_HIGH = 0;
 	public static final int OG_LOW = 1;
 	
+	public static int objects = 0;
+	
 	public static double[] offset = new double[]{0.10, 0.10, 0.10, 0.10};
-	private static double[] markerValue = new double[]{18, 1, 1, 18}; //finn en måte å generaliser denne og!
 	private Status status;
 	private Date date;
 	private List<ImageMarkerPoint> markers;
 	private	double[] values;
 	private String filepath;
-	
+	private int id; 
 	
 	public ImageDataModel(Date date, String path) {
 		this.date = date;
@@ -44,6 +45,8 @@ public class ImageDataModel implements ExcelModel {
 		
 		this.values = new double[2];
 		this.filepath = path;
+		this.id = objects;
+		objects ++;
 	}
 
 	public String getFilePath() {
@@ -53,6 +56,11 @@ public class ImageDataModel implements ExcelModel {
 	public Status getStatus() {
 		return status;
 	}
+	
+	public int getId() {
+		return this.id;
+	}
+	
 	public double markerArea(int i) {
 		if(markers != null && i< markers.size()) {
 			return this.markers.get(i).getArea();
@@ -158,7 +166,7 @@ public class ImageDataModel implements ExcelModel {
 	public double[] getMeasurementValues() {
 		if (status == Status.SUCCESS && isMarkersValid()) {
 			Measurement valueCalculator = Measurement.calculator();
-			valueCalculator.setCalculator(offset, markerValue, markers, values);
+			valueCalculator.setCalculator(offset, MarkerValue.getMarkerValues(this.id), markers, values);
 			return new double[]{valueCalculator.getThreePhaseValue(OW_VALUE), valueCalculator.getThreePhaseValue(OG_VALUE)};
 		}
 		else {

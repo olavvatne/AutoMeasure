@@ -32,11 +32,11 @@ public class Measurement {
 	public static final int NUMBER_OF_THREEPHASE_VALUES = 2;
 	
 	private double[] offset;
-	private double[] markerValue;
+	private List<Double> markerValue;
 	private List<ImageMarkerPoint> markers;
 	private	double[] values;
 	
-	public void setCalculator(double[] offset, double[] markerValue, List<ImageMarkerPoint> markers, double[] values) {
+	public void setCalculator(double[] offset, List<Double> markerValue, List<ImageMarkerPoint> markers, double[] values) {
 		this.offset = offset;
 		this.markerValue = markerValue;
 		this.markers = markers;
@@ -117,7 +117,7 @@ public class Measurement {
 	 */
 
 	private double getLineValue(int i) {
-		return markerValue[i];
+		return markerValue.get(i);
 	}
 	// END CALCULATING METHODS FOR MEASUREMENT VALUE
 }

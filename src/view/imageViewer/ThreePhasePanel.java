@@ -18,6 +18,7 @@ import java.util.List;
 import javax.swing.JPanel;
 
 import model.ImageDataModel;
+import model.MarkerValue;
 import analyze.ImageMarkerPoint;
 
 
@@ -55,7 +56,7 @@ public class ThreePhasePanel extends JPanel implements MouseListener, MouseMotio
 	private ImageDataModel model;
 	private int  windowWidth;
 	private int imageWidth;
-	private double[] markerValue = new double[]{18, 1, 1, 18}; //finn en måte å generaliser denne og!
+	private List<Double> markerValue = MarkerValue.getMarkerValues(model.getId());
 	private boolean[] isValueLineSelected = new boolean[2];
 	private int selected = NO_SELECTION;
 	
@@ -159,14 +160,14 @@ public class ThreePhasePanel extends JPanel implements MouseListener, MouseMotio
 	
 	private double getLineValue(int i) {
 		if(i<NR_OF_MARKERS) {
-			return markerValue[i];
+			return markerValue.get(i);
 		}
 		return -1;
 	}
 	
 	private void setLineValue(int i, double value) {
 		if(i<NR_OF_MARKERS) {
-			markerValue[i] = value;
+			markerValue.set(i, value);
 		}
 	}
 	

@@ -26,8 +26,7 @@ public class Offset {
 			values.add(0.10);
 			values.add(0.10);
 		IntervalModel<Double> initialOffset = new IntervalModel<Double>(0, values, Integer.MAX_VALUE);
-		offset.add(initialOffset);
-		return null;
+		return values;
 	}
 	
 	

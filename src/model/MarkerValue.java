@@ -27,7 +27,7 @@ private static List<IntervalModel<Double>> markerValues = init();
 			values.add(18.0);
 		IntervalModel<Double> initialMarkerValue = new IntervalModel<Double>(0, values, Integer.MAX_VALUE);
 		markerValues.add(initialMarkerValue);
-		return null;
+		return values;
 	}
 	
 	
