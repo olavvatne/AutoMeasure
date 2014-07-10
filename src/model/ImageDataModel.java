@@ -31,7 +31,6 @@ public class ImageDataModel implements ExcelModel {
 	
 	public static int objects = 0;
 	
-	public static double[] offset = new double[]{0.10, 0.10, 0.10, 0.10};
 	private Status status;
 	private Date date;
 	private List<ImageMarkerPoint> markers;
@@ -166,7 +165,7 @@ public class ImageDataModel implements ExcelModel {
 	public double[] getMeasurementValues() {
 		if (status == Status.SUCCESS && isMarkersValid()) {
 			Measurement valueCalculator = Measurement.calculator();
-			valueCalculator.setCalculator(offset, MarkerValue.getMarkerValues(this.id), markers, values);
+			valueCalculator.setCalculator(Offset.getOffset(id), MarkerValue.getMarkerValues(this.id), markers, values);
 			return new double[]{valueCalculator.getThreePhaseValue(OW_VALUE), valueCalculator.getThreePhaseValue(OG_VALUE)};
 		}
 		else {

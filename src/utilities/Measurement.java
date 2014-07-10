@@ -31,12 +31,12 @@ public class Measurement {
 	
 	public static final int NUMBER_OF_THREEPHASE_VALUES = 2;
 	
-	private double[] offset;
+	private List<Double> offset;
 	private List<Double> markerValue;
 	private List<ImageMarkerPoint> markers;
 	private	double[] values;
 	
-	public void setCalculator(double[] offset, List<Double> markerValue, List<ImageMarkerPoint> markers, double[] values) {
+	public void setCalculator(List<Double> offset, List<Double> markerValue, List<ImageMarkerPoint> markers, double[] values) {
 		this.offset = offset;
 		this.markerValue = markerValue;
 		this.markers = markers;
@@ -86,11 +86,11 @@ public class Measurement {
 	private double getLinePosWithOffset(int i) {
 		if (i%2== 0) {
 			return getMarkerXPosition(i)
-					+ getOffset(getMarkerXPosition(i), getMarkerXPosition(i+1), ImageDataModel.offset[i]);
+					+ getOffset(getMarkerXPosition(i), getMarkerXPosition(i+1), this.offset.get(i));
 		}
 		else {
 			return getMarkerXPosition(i)
-					- getOffset(getMarkerXPosition(i-1),getMarkerXPosition(i), ImageDataModel.offset[i]);
+					- getOffset(getMarkerXPosition(i-1),getMarkerXPosition(i), this.offset.get(i));
 		}
 	}
 
