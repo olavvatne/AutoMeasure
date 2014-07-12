@@ -38,7 +38,6 @@ public class ImageValueFinder  {
 		List<Double> values = new ArrayList<Double>();
 		values.add(strictFindValue(imp, true, 100)+ m.get(OG_HIGH).getX());
 		values.add(strictFindValue(imp2, false, 100) + m.get(OW_LOW).getX());
-		String s = IJ.freeMemory();
 		
 		return values;
 	}
@@ -80,11 +79,12 @@ public class ImageValueFinder  {
 		}
 		
 		//TODO: Not removed outliers
-		System.out.println("Average: " + average/valid );
-		System.out.println("Samples tots: " + valid );
-		System.out.println("valid samples: " + average );
-		System.out.println("Typical size of a sample: " + samples[40] );
-		return average/valid;
+		if(valid == 0) {
+			return -1;
+		}
+		else {
+			return average/valid;			
+		}
 	
 	}
 	

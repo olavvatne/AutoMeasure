@@ -8,6 +8,7 @@ import java.util.ArrayList;
 
 
 
+import java.util.HashMap;
 import java.util.List;
 
 import javax.swing.table.AbstractTableModel;
@@ -20,6 +21,7 @@ import automeasurer.Measurer;
 public class ImageTableModel extends AbstractTableModel implements PropertyChangeListener {
 	private String[] columnNames = {"status", "Date", "Feilmelding"};
 	protected ArrayList<ImageDataModel> data;
+	protected HashMap<Integer, String> errorColumn = new HashMap<Integer, String>();
 	protected PropertyChangeSupport pcs;
 	
 	public ImageTableModel() {
@@ -64,7 +66,14 @@ public class ImageTableModel extends AbstractTableModel implements PropertyChang
 	
 	@Override
 	public Object getValueAt(int rowIndex, int columnIndex) {
+		if(columnIndex == 2) {
+			return this.errorColumn.get(rowIndex);
+		}
 		return data.get(rowIndex).get(columnIndex);
+	}
+	
+	public void setErrorColumn(int row, String error) {
+		this.errorColumn.put(row, error);
 	}
 	
 	public void setMeasurementsAt(int rowIndex, double[] values) {

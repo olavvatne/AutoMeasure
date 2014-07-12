@@ -133,9 +133,6 @@ public class ImageDataModel implements ExcelModel {
 		case 1: {
 			return (Object)getDate();
 		}
-		case 2: {
-			return "Melding utifra status";
-		}
 		default: {
 			return null;
 		}
@@ -145,15 +142,11 @@ public class ImageDataModel implements ExcelModel {
 	public void set(int i, Object o) {
 		switch(i) {
 		case 0: {
-			setStatus((Status) o);;
+			setStatus((Status) o);
 			break;
 		}
 		case 1: {
 			//no-op
-			break;
-		}
-		case 2: {
-			//feilmelding -foreløping no op
 			break;
 		}
 		default: {

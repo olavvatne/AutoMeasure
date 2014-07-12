@@ -91,8 +91,9 @@ public class AnalyzerThreadsMonitor {
 		return this.model.getDataModel(i);
 	}
 	
-	public synchronized void setStatus(Status status, int row) {
+	public synchronized void setStatus(Status status, String error, int row) {
 		this.model.setValueAt((Object)status, row, 0);
+		this.model.setErrorColumn(row, error);
 	}
 	
 	

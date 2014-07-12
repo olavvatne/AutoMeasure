@@ -34,34 +34,34 @@ public class Analyzer extends Thread {
 				 Thread.yield();
 			 }
 	               
-			mon.setStatus(Status.WORKED_ON, elementToAnalyze); 
+			mon.setStatus(Status.WORKED_ON, null, elementToAnalyze); 
 			
-			
+			boolean valid = false;
 			List<ImageMarkerPoint> markers =ImageMarkerFinder.run(image.getFilePath());
+			List<Double> values = null;
 			if(fd.isMarkersCorrect(markers)) {
-				List<Double> values =ImageValueFinder.getValues(image.getFilePath(), markers);
+				values =ImageValueFinder.getValues(image.getFilePath(), markers);
 				if(fd.isValuesCorrect(values)) {
-					mon.setStatus(Status.SUCCESS, elementToAnalyze); 
-					//TODO: Convert from using double array to a arraylist
-					double[] arrVal = new double[values.size()];
-					for(int i= 0; i<arrVal.length; i++) {
-						arrVal[i] = values.get(i);
-					}
-					image.setValues(arrVal);
+					valid = true;
+				}	
+			}
+			if(valid) {
+				
+				//TODO: Convert from using double array to a arraylist
+				double[] arrVal = new double[values.size()];
+				for(int i= 0; i<arrVal.length; i++) {
+					arrVal[i] = values.get(i);
 				}
+				image.setValues(arrVal);
+				image.setMarkers(markers);
 				System.out.println("VALUES IN ANALYZER " + values.get(0) + " - " + values.get(1));
 				//image.setStatus(Status.SUCCESS);
 				//TODO: Use previous values or something.
-				
-				image.setMarkers(markers);
-				
+				mon.setStatus(Status.SUCCESS, null, elementToAnalyze); 
 			}
 			else {
 				//image.setStatus(Status.FAILURE);
-				mon.setStatus(Status.FAILURE, elementToAnalyze); 
-				System.out.println("*******");
-				
-				System.out.println("*******");
+				mon.setStatus(Status.FAILURE, fd.getErrorMessage(), elementToAnalyze); 
 			}
 			
 			
