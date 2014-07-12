@@ -10,7 +10,8 @@ import java.util.List;
  *
  */
 public class FaultDetector {
-	
+	//Must find automatic way,or set in settings
+	private static int gap = 200;
 	private String errorMessage;
 	//TODO: NOT USED
 	private boolean correct;
@@ -52,6 +53,12 @@ public class FaultDetector {
 		}
 		
 		int verticalVariance = calcVerticalVariance(markers);
+		
+		boolean gapBetweenMarkers =  isHorizontalGap(markers);
+		if(!gapBetweenMarkers) {
+			errorMessage = "Not enough gap between markers";
+			return false;
+		}
 		//TODO: Parameter in settings for variance allowed
 		if (verticalVariance > 200) {
 			errorMessage = "The points are not align along the y axis. The variance is " + verticalVariance;
@@ -61,6 +68,16 @@ public class FaultDetector {
 		return correct;
 	}
 	
+	//assume markers is sorted
+	//Se if there is some gap between each marker
+	private static boolean isHorizontalGap(List<ImageMarkerPoint> markers) {
+		for (int i = 1; i<markers.size(); i++) {
+			if(Math.abs(markers.get(i-1).getX()-markers.get(i).getX())<gap) {
+				return false;
+			}
+		}
+		return true;
+	}
 	
 	public boolean isValuesCorrect(List<Double> values) {
 		errorMessage = null;
