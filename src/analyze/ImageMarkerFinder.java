@@ -27,7 +27,6 @@ public class ImageMarkerFinder {
 	public static List<ImageMarkerPoint> run(String name) {
 		
 		ImagePlus imp = new Opener().openImage(name);
-		System.out.println(imp);
 		ImageStack stack = imp.getStack();
 		
 		int width = stack.getWidth();
@@ -89,10 +88,7 @@ public class ImageMarkerFinder {
 		anal.analyze(imp);
 		
 		ResultsTable table = anal.getResultsTable();
-		
-		System.out.println("---------------------------");
-		System.out.println("----  "+table.getCounter()+ "  ---");
-		System.out.println("---------------------------");
+
 		if(table == null) {
 			System.out.println("null");
 		}

@@ -4,6 +4,7 @@ import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
 
 import ij.IJ;
 import ij.ImagePlus;
@@ -11,12 +12,11 @@ import ij.io.Opener;
 
 public class ImageValueFinder  {
 	
-	public static final int OG_END = 0;
-	public static final int OW_END = 2;
 	public static final int OW_HIGH = 3;
 	public static final int OW_LOW = 2;
 	public static final int OG_HIGH = 0;
 	public static final int OG_LOW = 1;
+	public static final int WHITE = 255;
 	
 	//Photoshop measured ratio. TODO: Settings panel
 	public static double widthHeightRatio = 0.16;
@@ -33,55 +33,129 @@ public class ImageValueFinder  {
 		ImagePlus imp = new Opener().openImage(name);
 		ImagePlus imp2 = imp.duplicate();
 		imp = crop(imp, m.get(OG_HIGH), m.get(OG_LOW));
-		imp2 = crop(imp2, m.get(OW_LOW), m.get(OG_HIGH));
+		imp2 = crop(imp2, m.get(OW_LOW), m.get(OW_HIGH));
 		
 		List<Double> values = new ArrayList<Double>();
-		values.add(findValue(imp, true, 100)+ m.get(OG_END).getX());
-		values.add(findValue(imp2, false, 100) + m.get(OW_END).getX());
+		values.add(strictFindValue(imp, true, 100)+ m.get(OG_HIGH).getX());
+		values.add(strictFindValue(imp2, false, 100) + m.get(OW_LOW).getX());
 		String s = IJ.freeMemory();
 		
 		return values;
 	}
 	
 	/**
-	 * The findValue method assume that the image it gets is cropped and contain only the measurement area.
+	 * The strictFindValue method assume that the image it gets is cropped and contain only the measurement area.
 	 * I.E just the glass part of the image is present, and all rows is available to me tested.
 	 * A number of rows will be tested, and the number is decided by sampleSize. After sampling, all
 	 * sample values is sorted. From the sorted 
 	 * @param imp Cropped image, of the surface to be measured
 	 * @param left The direction the samples should be taken in. Left = true, Right = false
 	 * @param sampleSize How many row should be sampled from the image surface.
-	 * @return Return the median.
+	 * @return Return the average where invalid samples has been removed.
 	 */
-	public static double findValue(ImagePlus imp, boolean left, int sampleSize) {
+	
+	private static double strictFindValue(ImagePlus imp, boolean left, int sampleSize) {
 		IJ.run(imp, "8-bit", "");
 		IJ.run(imp, "Smooth", "");
 		IJ.run(imp, "Smooth", "");
-		IJ.run(imp, "Make Binary", "");
+		IJ.setAutoThreshold(imp,"Default"); 
+		IJ.run(imp, "Convert to Mask", ""); 
 		
-		
-		int[] samples = new int[sampleSize];
-		
-		int outlierSize = (int)(sampleSize*0.10);
-		int yStart = (imp.getHeight()/2)-50;
-		//Må nok forbedre denne metoden, se kommenterte kode under.
-		for (int i = 0; i<sampleSize; i++) {
-
-			int j;
-			for (j = 0; j<imp.getWidth(); j++) {
-				if (imp.getPixel(j, yStart)[0]<255) {
-					break;
-				}
-			}
-			samples[i] =j;
-			yStart ++;
+		int[] samples = null;
+		if(left) {
+			samples = findSamplesReverse(imp, sampleSize);	
+		}
+		else {
+			samples = findSamples(imp, sampleSize);			
 		}
 		Arrays.sort(samples);
 		
+		int average = 0;
+		int valid = 0;
+		for ( int s = 0; s<samples.length; s ++ ) {
+			if(samples[s] != -1) {
+				valid ++;
+				average += samples[s];
+			}
+		}
 		
-		return (( samples[sampleSize/2] + samples[(sampleSize/2)-1] ) / 2);
+		//TODO: Not removed outliers
+		System.out.println("Average: " + average/valid );
+		System.out.println("Samples tots: " + valid );
+		System.out.println("valid samples: " + average );
+		System.out.println("Typical size of a sample: " + samples[40] );
+		return average/valid;
+	
 	}
 	
+	//Bad code duplication, same code for reversal almost.
+	private static int[] findSamples(ImagePlus imp, int sampleSize) {
+		Random generator = new Random();
+		int width = imp.getWidth();
+		int height = imp.getHeight();
+		int[] samples = new int[sampleSize];
+		
+		for (int i = 0; i<sampleSize; i++) {
+			int counter = 0;
+			int value = 0;
+			int sampleRow = generator.nextInt(height);
+			for (int j = 1; j<width; j++) {
+				
+				//Binary image so if sentence is valid. Count transition from white to black and black to white
+				if (imp.getPixel(j, sampleRow)[0] != imp.getPixel(j-1, sampleRow)[0]) {
+					if(counter <= 1 && imp.getPixel(j, sampleRow)[0] < WHITE) {
+						//What pixel in the row the for loop is at now
+						//If transition from black to white its go time.
+						value = j;
+					}
+					counter ++;
+				}
+			}
+			
+			if(counter <= 2) {
+				samples[i] =value;
+			}
+			else {
+				//All invalid samples with to many transitions is set to -1
+				samples[i] = -1;
+			}
+		}
+		return samples;
+	}
+	
+	//Bad code duplication, same code for reversal almost.
+		private static int[] findSamplesReverse(ImagePlus imp, int sampleSize) {
+			Random generator = new Random();
+			int width = imp.getWidth();
+			int height = imp.getHeight();
+			int[] samples = new int[sampleSize];
+			
+			for (int i = 0; i<sampleSize; i++) {
+				int counter = 0;
+				int value = 0;
+				int sampleRow = generator.nextInt(height);
+				for (int j = width -1; j>0; j--) {
+					
+					//Binary image so if sentence is valid. Count transition from white to black and black to white
+					if (imp.getPixel(j, sampleRow)[0] != imp.getPixel(j+1, sampleRow)[0]) {
+						if(counter <= 1 && imp.getPixel(j, sampleRow)[0] < WHITE) {
+							//What pixel in the row the for loop is at now
+							value = j;
+						}
+						counter ++;
+					}
+				}
+				
+				if(counter <= 2) {
+					samples[i] =value;
+				}
+				else {
+					//All invalid samples with to many transitions is set to -1
+					samples[i] = -1;
+				}
+			}
+			return samples;
+		}
 	/**
 	 * Crop will crop a image after p1 and p2. The height of the image is decided by an width height ratio that probably wont change often.
 	 * The apparatus is often similar. Can be a value changed in the settings, or set in a calibrate panel. 
@@ -90,10 +164,13 @@ public class ImageValueFinder  {
 	 * @param p2 Point where image should be cropped to the right.
 	 * @return A cropped image.
 	 */
-	public static ImagePlus crop(ImagePlus img, ImageMarkerPoint p1,ImageMarkerPoint p2 ) {
+	private static ImagePlus crop(ImagePlus img, ImageMarkerPoint p1,ImageMarkerPoint p2 ) {
+		System.out.println("******CROP*****");
+		System.out.println(p1);
+		System.out.println(p2);
 		int x = (int)p1.getX();
 		int x2 = (int) p2.getX();
-		int w = x2-x;
+		int w = Math.abs(x2-x);
 		int h = (int) (w*widthHeightRatio); //height of apparatus //h can change so must have a setting or something
 		int y = (int) p1.getY() -(h/2); 
 		
@@ -102,40 +179,4 @@ public class ImageValueFinder  {
 		return img;
 	}
 	
-	/*public static double findValue(ImagePlus imp, boolean left, int sampleSize) {
-		IJ.run(imp, "8-bit", "");
-		IJ.run(imp, "Gaussian Blur...", "sigma=2");
-		IJ.run(imp, "Convolve...", "text1=[ -1 0 1 \n -2 0 2 \n -1 0 1 \n] normalize");
-		IJ.run(imp, "Make Binary", "");
-		IJ.run(imp, "Close-", "");
-		IJ.run(imp, "Erode", "");
-		IJ.run(imp, "Erode", "");
-		
-		//imp.show();
-		
-		int[] samples = new int[sampleSize];
-		int yStart = (imp.getHeight()/2)-50;
-		//System.out.println("YSTART ________________----------" + yStart);
-		for (int i = 0; i<sampleSize; i++) {
-			int samplePos = 0;
-			int lastSample = 0;
-			//finn bedre måte å ta mål på
-			for ( int j = 0; j<imp.getWidth(); j++) {
-				if(imp.getPixel(j, yStart)[0] < imp.getPixel(samplePos, samplePos)[0]) {
-					break;
-				}
-				else {
-					samplePos = j;
-					lastSample =imp.getPixel(j, yStart)[0];
-				}
-				
-			}
-			System.out.println(samplePos);
-			yStart ++;
-			samples[i] = samplePos;
-		}
-		Arrays.sort(samples);
-		
-		return ( samples[sampleSize/2] + samples[(sampleSize/2)-1] ) / 2;
-	}*/
 }
