@@ -1,6 +1,7 @@
 package analyze;
 
 import java.awt.Rectangle;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -13,15 +14,15 @@ public class ImageValueFinder  {
 	public static final int OG_END = 0;
 	public static final int OW_END = 2;
 	
-	public static double[] getValues(String name, List<ImageMarkerPoint> m) {
+	public static List<Double> getValues(String name, List<ImageMarkerPoint> m) {
 		ImagePlus imp = new Opener().openImage(name);
 		ImagePlus imp2 = imp.duplicate();
 		imp = crop(imp, m.get(OG_END), m.get(1));
 		imp2 = crop(imp2, m.get(OW_END), m.get(3));
 		
-		double[] values = new double[2];
-		values[0] =findValue(imp, true, 100)+ m.get(OG_END).getX();
-		values[1] =findValue(imp2, false, 100) + m.get(OW_END).getX();
+		List<Double> values = new ArrayList<Double>();
+		values.add(findValue(imp, true, 100)+ m.get(OG_END).getX());
+		values.add(findValue(imp2, false, 100) + m.get(OW_END).getX());
 		String s = IJ.freeMemory();
 		
 		return values;

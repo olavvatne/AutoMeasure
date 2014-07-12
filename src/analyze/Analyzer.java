@@ -1,6 +1,7 @@
 
 package analyze;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import model.ImageDataModel;
@@ -11,11 +12,13 @@ public class Analyzer extends Thread {
 	private int idNumber;
 	private int elementToAnalyze;
 	private AnalyzerThreadsMonitor mon;
+	private FaultDetector fd;
 	private boolean running = false;
 	
 	public Analyzer(int id, AnalyzerThreadsMonitor monitor) {
 		this.idNumber = id;
 		this.mon = monitor;
+		this.fd = new FaultDetector();
 	}
 	
 	public void run() {
@@ -27,21 +30,31 @@ public class Analyzer extends Thread {
 		while(image != null) {
 			//crude implementation of pausing thread. Should use some sort of monitor
 			 while (!running) {
-				 this.yield();
+				 //Super crude. Busy waiting.
+				 Thread.yield();
 			 }
 	               
 			mon.setStatus(Status.WORKED_ON, elementToAnalyze); 
 			
 			
 			List<ImageMarkerPoint> markers =ImageMarkerFinder.run(image.getFilePath());
-			if(markers != null) {
-				double[] values =ImageValueFinder.getValues(image.getFilePath(), markers);
-				System.out.println("VALUES IN ANALYZER " + values[0] + " - " + values[1]);
+			if(fd.isMarkersCorrect(markers)) {
+				List<Double> values =ImageValueFinder.getValues(image.getFilePath(), markers);
+				if(fd.isValuesCorrect(values)) {
+					mon.setStatus(Status.SUCCESS, elementToAnalyze); 
+					//TODO: Convert from using double array to a arraylist
+					double[] arrVal = new double[values.size()];
+					for(int i= 0; i<arrVal.length; i++) {
+						arrVal[i] = values.get(i);
+					}
+					image.setValues(arrVal);
+				}
+				System.out.println("VALUES IN ANALYZER " + values.get(0) + " - " + values.get(1));
 				//image.setStatus(Status.SUCCESS);
-				mon.setStatus(Status.SUCCESS, elementToAnalyze); 
+				//TODO: Use previous values or something.
+				
 				image.setMarkers(markers);
-				image.setValues(values);
-				System.out.println("funket");
+				
 			}
 			else {
 				//image.setStatus(Status.FAILURE);

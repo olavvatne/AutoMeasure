@@ -130,7 +130,13 @@ public class OpenFoldersPanel extends JPanel implements ActionListener {
 		//nullpointer exception må håndtere når filer ikke inneholder metadata!
 		if(metadata != null) {
 			ExifSubIFDDirectory directory = metadata.getDirectory(ExifSubIFDDirectory.class);
-			Date date = directory.getDate(ExifSubIFDDirectory.TAG_DATETIME_ORIGINAL);
+			Date date = null;
+			try {
+				date = directory.getDate(ExifSubIFDDirectory.TAG_DATETIME_ORIGINAL);
+			} catch (Exception e) {
+				//TODO: BETTER ERROR HANDLING __INVALID IMAGES GETS HERE
+				date = new Date();
+			}
 			date.setSeconds(ZERO_SECONDS_INT);
 			return date;
 		}

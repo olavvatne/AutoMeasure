@@ -62,7 +62,7 @@ public class FaultDetector {
 	}
 	
 	
-	public boolean isValuesCorrect(List<ImageMarkerPoint> values) {
+	public boolean isValuesCorrect(List<Double> values) {
 		errorMessage = null;
 		correct = true;
 		
@@ -71,16 +71,9 @@ public class FaultDetector {
 			return !correct;
 		}
 		
-		//TODO: Config for how many markers there should be! Settings etc. TEMP set to 4 markers
-		if(values.size() != 4) {
+		//TODO: Config for how many markers there should be! Settings etc. TEMP set to 2 values
+		if(values.size() != 2) {
 			errorMessage = values.size() + " values were found. Should be 4 exactly";
-			return !correct;
-		}
-		
-		int verticalVariance = calcVerticalVariance(values);
-		//TODO: Parameter in settings for variance allowed
-		if (verticalVariance > 50) {
-			errorMessage = "The points are not align along the y axis. The variance is " + verticalVariance;
 			return !correct;
 		}
 		
