@@ -15,6 +15,7 @@ import java.util.List;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JSplitPane;
 
 import view.excelSaveDialog.SaveToExcelFilePanel;
 import view.imageFolderDialog.OpenFoldersPanel;
@@ -48,12 +49,12 @@ public class MainPanel extends JPanel implements ActionListener, PropertyChangeL
 		this.add(toolBar, BorderLayout.PAGE_START);
 		
 		InfoPanel infoPanel = new InfoPanel();
-		this.add(infoPanel, BorderLayout.EAST);
-		//infoPanel.setBackground(Color.black);
-		
 		ImageTablePanel imageTablePanel = new ImageTablePanel(model);
-		this.add(imageTablePanel, BorderLayout.CENTER);
-		//imageTablePanel.setBackground(Color.blue);
+		
+		JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,
+                imageTablePanel, infoPanel);
+		this.add(splitPane, BorderLayout.CENTER);
+		
 		progress = new ProgressPanel();
 		this.add(progress, BorderLayout.SOUTH);
 		this.model.addPropertyChangeListener(this);
