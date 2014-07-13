@@ -84,7 +84,7 @@ public class FaultDetector {
 		correct = true;
 		
 		if ( values == null) {
-			errorMessage = "No markers found";
+			errorMessage = "No values found";
 			return !correct;
 		}
 		
