@@ -96,8 +96,10 @@ public class OpenFoldersPanel extends JPanel implements ActionListener {
 					for ( int j = 0; j<files.size(); j++) {
 						for (int i = 0 ; i<files.get(j).length; i++) {
 							list.add(new ImageDataModel(getDate(files.get(j)[i]), files.get(j)[i].getAbsolutePath()));
-							//Inefficent to send a event for each file. A bit overkill. getDate later also maybe?
-							pcs.firePropertyChange(Measurer.PROGRESS_UPDATE, null, new Integer(size+i));
+							if(i % 30 == 0) {
+								pcs.firePropertyChange(Measurer.PROGRESS_UPDATE, null, new Integer(size+i));
+							}
+							
 						}
 						size+=files.get(j).length;
 					}
@@ -148,12 +150,17 @@ public class OpenFoldersPanel extends JPanel implements ActionListener {
 		File file;
 		
 		fc.setFileFilter(new ImageFilter());
-
+		fc.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
 
 		int returnVal = fc.showDialog(null, title);
 		if (returnVal == JFileChooser.APPROVE_OPTION) {
 			file = fc.getSelectedFile();
-			this.files.add(file.getParentFile().listFiles());
+			if(file.isDirectory()) {
+				this.files.add(file.listFiles());
+			}
+			else {
+				this.files.add(file.getParentFile().listFiles());				
+			}
 			this.model.addElement(file.getName());
 			//pcs.firePropertyChange(Measurer.NEW_IMAGE_FOLDER, null, null);
 			return true;
