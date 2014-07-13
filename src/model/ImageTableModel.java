@@ -24,6 +24,8 @@ public class ImageTableModel extends AbstractTableModel implements PropertyChang
 	protected HashMap<Integer, String> errorColumn = new HashMap<Integer, String>();
 	protected PropertyChangeSupport pcs;
 	
+	public static final int ERROR_COLUMN = 2;
+	
 	public ImageTableModel() {
 		super();
 		this.data = new ArrayList<ImageDataModel>();
@@ -66,7 +68,7 @@ public class ImageTableModel extends AbstractTableModel implements PropertyChang
 	
 	@Override
 	public Object getValueAt(int rowIndex, int columnIndex) {
-		if(columnIndex == 2) {
+		if(columnIndex == ERROR_COLUMN) {
 			return this.errorColumn.get(rowIndex);
 		}
 		return data.get(rowIndex).get(columnIndex);
@@ -74,6 +76,7 @@ public class ImageTableModel extends AbstractTableModel implements PropertyChang
 	
 	public void setErrorColumn(int row, String error) {
 		this.errorColumn.put(row, error);
+		fireTableCellUpdated(row, ERROR_COLUMN);
 	}
 	
 	public void setMeasurementsAt(int rowIndex, double[] values) {
