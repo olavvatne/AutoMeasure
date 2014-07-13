@@ -59,7 +59,6 @@ public class ImageValueFinder  {
 		IJ.run(imp, "Smooth", "");
 		IJ.setAutoThreshold(imp,"Default"); 
 		IJ.run(imp, "Convert to Mask", ""); 
-		imp.show();
 		int[] samples = null;
 		if(left) {
 			samples = findSamplesReverse(imp, sampleSize);	
