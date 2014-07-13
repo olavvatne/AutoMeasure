@@ -40,15 +40,15 @@ public class CalibratePanel extends Viewer implements ActionListener {
 		toolBar.add(Box.createHorizontalStrut(10));
 		button = new JButton("Find markers");
         button.setActionCommand(Measurer.ANALYZE_IMAGE);
-        button.setToolTipText("Analyser bilde for å finne markører");
+        button.setToolTipText("Analyze image to test the calibration of the analyzer");
         button.addActionListener(this);
         toolBar.add(button);
         
         toolBar.add( Box.createHorizontalGlue() );
         
-        button = new JButton("Fullfør");
+        button = new JButton("Finish");
         button.setActionCommand("FINISH");
-        button.setToolTipText("Lagre innstillinger");
+        button.setToolTipText("Save calibration");
         button.addActionListener(this);
         toolBar.add(button);
         
@@ -62,7 +62,6 @@ public class CalibratePanel extends Viewer implements ActionListener {
         
         if (Measurer.ANALYZE_IMAGE.equals(cmd))
         {
-        	System.out.println("LOL");
         	List<ImageMarkerPoint> markers =ImageMarkerFinder.run(data.getFilePath());
 			if(markers != null) {
 				 
@@ -75,9 +74,15 @@ public class CalibratePanel extends Viewer implements ActionListener {
 			}	
         }
         else if ("FINISH".equals(cmd)) {
-        	((JFrame)SwingUtilities.getRoot(this)).setVisible(false);
-        	((JFrame)SwingUtilities.getRoot(this)).dispose();
+        	//Only save calibration if user clics the button. Not if he exits.
+        	saveAndCloseCalibration();
         }
 	}
-
+	
+	private void saveAndCloseCalibration() {
+		//TODO: Save other calibration when time comes
+		threePhasePanel.close();
+		((JFrame)SwingUtilities.getRoot(this)).setVisible(false);
+    	((JFrame)SwingUtilities.getRoot(this)).dispose();
+	}
 }
