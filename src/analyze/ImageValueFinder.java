@@ -59,7 +59,7 @@ public class ImageValueFinder  {
 		IJ.run(imp, "Smooth", "");
 		IJ.setAutoThreshold(imp,"Default"); 
 		IJ.run(imp, "Convert to Mask", ""); 
-		
+		imp.show();
 		int[] samples = null;
 		if(left) {
 			samples = findSamplesReverse(imp, sampleSize);	
@@ -99,20 +99,22 @@ public class ImageValueFinder  {
 			int counter = 0;
 			int value = 0;
 			int sampleRow = generator.nextInt(height);
+			boolean sampleTaken = false;
 			for (int j = 1; j<width; j++) {
 				
 				//Binary image so if sentence is valid. Count transition from white to black and black to white
 				if (imp.getPixel(j, sampleRow)[0] != imp.getPixel(j-1, sampleRow)[0]) {
-					if(counter <= 1 && imp.getPixel(j, sampleRow)[0] < WHITE) {
+					if(!sampleTaken && imp.getPixel(j, sampleRow)[0] < WHITE) {
 						//What pixel in the row the for loop is at now
 						//If transition from black to white its go time.
 						value = j;
+						sampleTaken = true;
 					}
 					counter ++;
 				}
 			}
 			
-			if(counter <= 2) {
+			if(counter <= 2 && sampleTaken) {
 				samples[i] =value;
 			}
 			else {
@@ -133,20 +135,22 @@ public class ImageValueFinder  {
 			for (int i = 0; i<sampleSize; i++) {
 				int counter = 0;
 				int value = 0;
+				boolean sampleTaken = false;
 				int sampleRow = generator.nextInt(height);
 				for (int j = width -1; j>0; j--) {
 					
 					//Binary image so if sentence is valid. Count transition from white to black and black to white
 					if (imp.getPixel(j, sampleRow)[0] != imp.getPixel(j+1, sampleRow)[0]) {
-						if(counter <= 1 && imp.getPixel(j, sampleRow)[0] < WHITE) {
+						if(!sampleTaken && imp.getPixel(j, sampleRow)[0] < WHITE) {
 							//What pixel in the row the for loop is at now
 							value = j;
+							sampleTaken = true;
 						}
 						counter ++;
 					}
 				}
 				
-				if(counter <= 2) {
+				if(counter <= 2 && sampleTaken) {
 					samples[i] =value;
 				}
 				else {
@@ -165,9 +169,6 @@ public class ImageValueFinder  {
 	 * @return A cropped image.
 	 */
 	private static ImagePlus crop(ImagePlus img, ImageMarkerPoint p1,ImageMarkerPoint p2 ) {
-		System.out.println("******CROP*****");
-		System.out.println(p1);
-		System.out.println(p2);
 		int x = (int)p1.getX();
 		int x2 = (int) p2.getX();
 		int w = Math.abs(x2-x);

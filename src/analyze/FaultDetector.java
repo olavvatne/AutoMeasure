@@ -59,6 +59,7 @@ public class FaultDetector {
 			errorMessage = "Not enough gap between markers";
 			return false;
 		}
+		
 		//TODO: Parameter in settings for variance allowed
 		if (verticalVariance > 200) {
 			errorMessage = "The points are not align along the y axis. The variance is " + verticalVariance;
@@ -80,7 +81,6 @@ public class FaultDetector {
 	}
 	
 	public boolean isValuesCorrect(List<Double> values) {
-		errorMessage = null;
 		correct = true;
 		
 		if ( values == null) {

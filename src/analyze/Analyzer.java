@@ -26,7 +26,7 @@ public class Analyzer extends Thread {
 		elementToAnalyze = mon.getNextElement();
 		ImageDataModel image = mon.getImageDataModel(elementToAnalyze);
 		
-		System.out.println("kjører" + elementToAnalyze);
+		System.out.println("Image " + image.getFilePath());
 		while(image != null) {
 			//crude implementation of pausing thread. Should use some sort of monitor
 			 while (!running) {
