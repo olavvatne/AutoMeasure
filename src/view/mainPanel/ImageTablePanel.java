@@ -55,9 +55,10 @@ public class ImageTablePanel extends JPanel implements MouseListener, PropertyCh
 			int row = imageTable.convertRowIndexToModel(rowInTable);
 			//pass på memory leak?? Sjekk det ut senere
 			ImageDataModel data = this.model.getDataModel(row);
-			MeasurementsPanel panel = new MeasurementsPanel(data, model, row);
-			panel.addChangeListener(this);
 			JFrame frame = new JFrame();
+			MeasurementsPanel panel = new MeasurementsPanel(frame, data, model, row);
+			panel.addChangeListener(this);
+			
 			Dimension sz = Toolkit.getDefaultToolkit().getScreenSize();
 			frame.setMinimumSize(new Dimension((int)(sz.getWidth()/2), (int)(sz.getHeight()/2)));
 			frame.setPreferredSize(sz);// må vekk for at minimering skal faktisk minimere, maximize forårsaker layout krøll med initflytting

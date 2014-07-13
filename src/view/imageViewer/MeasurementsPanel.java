@@ -5,6 +5,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.List;
@@ -33,7 +36,7 @@ public class MeasurementsPanel extends Viewer implements ActionListener, KeyList
 	int row;
 	
 	//finn bedre måte med refactorering
-	public MeasurementsPanel(ImageDataModel data, ImageTableModel model, int row) {
+	public MeasurementsPanel(JFrame frame, ImageDataModel data, ImageTableModel model, int row) {
 		super(data);
 		this.model = model;
 		this.row = row;
@@ -43,6 +46,13 @@ public class MeasurementsPanel extends Viewer implements ActionListener, KeyList
         toolBar.setRollover(true);
         add(toolBar, BorderLayout.PAGE_START);
         this.addKeyListener(this);
+        
+        frame.addWindowListener(new WindowAdapter() {
+        	@Override
+            public void windowClosed(WindowEvent e) {
+                saveChanges();
+            }
+        });
         this.pcs = new PropertyChangeSupport(this);
 	}
 	
@@ -75,7 +85,7 @@ public class MeasurementsPanel extends Viewer implements ActionListener, KeyList
 	private void iterateModel(String cmd) {
 		if (Measurer.NEXT.equals(cmd)) {
 			if(this.model.getRowCount() > row+1) {
-				this.threePhasePanel.close();
+				saveChanges();
 				row ++;	
 				this.setModel(this.model.getDataModel(row));
 				pcs.firePropertyChange(Measurer.TABLE_SELECTION, this.row-1, this.row);
@@ -83,7 +93,7 @@ public class MeasurementsPanel extends Viewer implements ActionListener, KeyList
 		}
 		else if (Measurer.PREVIOUS.equals(cmd) ) {
 			if(row-1 >= 0) {
-				this.threePhasePanel.close();
+				saveChanges();
 				row --;
 				this.setModel(this.model.getDataModel(row));
 				pcs.firePropertyChange(Measurer.TABLE_SELECTION, this.row+1, this.row);
@@ -118,5 +128,9 @@ public class MeasurementsPanel extends Viewer implements ActionListener, KeyList
 	public void keyTyped(KeyEvent e) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	private void saveChanges() {
+		this.threePhasePanel.close();
 	}
 }
