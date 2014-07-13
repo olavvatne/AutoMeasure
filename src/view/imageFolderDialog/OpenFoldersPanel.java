@@ -45,6 +45,7 @@ public class OpenFoldersPanel extends JPanel implements ActionListener {
 	private byte counter = 1;
 	final JFileChooser fc = new JFileChooser();
 	private JList list;
+	private JScrollPane scroll;
 	private DefaultListModel model;
 	private PropertyChangeSupport pcs;
 	
@@ -64,9 +65,10 @@ public class OpenFoldersPanel extends JPanel implements ActionListener {
 		
 		model = new DefaultListModel<String>();
 		list = new JList<String>();
-		
+		scroll = new JScrollPane(list);
 		list.setModel(model);
-		this.add(list);
+		
+		this.add(scroll);
 		
 	}
 	private int getSizeOfFiles() {
