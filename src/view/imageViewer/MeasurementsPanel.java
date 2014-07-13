@@ -5,6 +5,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.util.List;
 
 import javax.swing.Box;
@@ -27,7 +29,9 @@ import model.ImageTableModel;
  */
 public class MeasurementsPanel extends Viewer implements ActionListener, KeyListener {
 	ImageTableModel model;
+	private PropertyChangeSupport pcs; 
 	int row;
+	
 	//finn bedre måte med refactorering
 	public MeasurementsPanel(ImageDataModel data, ImageTableModel model, int row) {
 		super(data);
@@ -39,6 +43,7 @@ public class MeasurementsPanel extends Viewer implements ActionListener, KeyList
         toolBar.setRollover(true);
         add(toolBar, BorderLayout.PAGE_START);
         this.addKeyListener(this);
+        this.pcs = new PropertyChangeSupport(this);
 	}
 	
 	
@@ -73,6 +78,7 @@ public class MeasurementsPanel extends Viewer implements ActionListener, KeyList
 				this.threePhasePanel.close();
 				row ++;	
 				this.setModel(this.model.getDataModel(row));
+				pcs.firePropertyChange(Measurer.TABLE_SELECTION, this.row-1, this.row);
 			}
 		}
 		else if (Measurer.PREVIOUS.equals(cmd) ) {
@@ -80,10 +86,15 @@ public class MeasurementsPanel extends Viewer implements ActionListener, KeyList
 				this.threePhasePanel.close();
 				row --;
 				this.setModel(this.model.getDataModel(row));
+				pcs.firePropertyChange(Measurer.TABLE_SELECTION, this.row+1, this.row);
 			}
 		}
 	}
-
+	
+	public void addChangeListener(PropertyChangeListener listener) {
+		this.pcs.addPropertyChangeListener(listener);
+	}
+	
 	@Override
 	public void keyPressed(KeyEvent e) {
 		if(e.getKeyCode() == KeyEvent.VK_LEFT) {

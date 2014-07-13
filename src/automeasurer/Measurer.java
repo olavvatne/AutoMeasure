@@ -35,6 +35,7 @@ public class Measurer {
 	public static final String CALIBRATE = "calibrate";
 	public static final String NEXT = "next";
 	public static final String PREVIOUS ="previous";
+	public static final String TABLE_SELECTION = "TblSelection";
 	
 	
 	public static void main(String[] args) {

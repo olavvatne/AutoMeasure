@@ -7,6 +7,8 @@ import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -14,6 +16,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.border.EmptyBorder;
 
+import automeasurer.Measurer;
 import view.imageViewer.MeasurementsPanel;
 import view.imageViewer.Viewer;
 import model.ImageDataModel;
@@ -24,7 +27,7 @@ import model.ImageTableModel;
  * @author Olav
  *
  */
-public class ImageTablePanel extends JPanel implements MouseListener {
+public class ImageTablePanel extends JPanel implements MouseListener, PropertyChangeListener {
 	private ImageTableModel model;
 	private JTable imageTable;
 	private JScrollPane listScroll;
@@ -52,7 +55,8 @@ public class ImageTablePanel extends JPanel implements MouseListener {
 			int row = imageTable.convertRowIndexToModel(rowInTable);
 			//pass på memory leak?? Sjekk det ut senere
 			ImageDataModel data = this.model.getDataModel(row);
-			Viewer panel = new MeasurementsPanel(data, model, row);
+			MeasurementsPanel panel = new MeasurementsPanel(data, model, row);
+			panel.addChangeListener(this);
 			JFrame frame = new JFrame();
 			Dimension sz = Toolkit.getDefaultToolkit().getScreenSize();
 			frame.setMinimumSize(new Dimension((int)(sz.getWidth()/2), (int)(sz.getHeight()/2)));
@@ -92,6 +96,14 @@ public class ImageTablePanel extends JPanel implements MouseListener {
 	public void mouseReleased(MouseEvent e) {
 		// TODO Auto-generated method stub
 		
+	}
+
+
+	@Override
+	public void propertyChange(PropertyChangeEvent evt) {
+		if(Measurer.TABLE_SELECTION.equals(evt.getPropertyName())) {
+			imageTable.setRowSelectionInterval((int)evt.getNewValue(), (int)evt.getNewValue());
+		}
 	}
 
 	
