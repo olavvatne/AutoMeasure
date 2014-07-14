@@ -36,8 +36,21 @@ public class ImageValueFinder  {
 		imp2 = crop(imp2, m.get(OW_LOW), m.get(OW_HIGH));
 		
 		List<Double> values = new ArrayList<Double>();
-		values.add(strictFindValue(imp, true, 100)+ m.get(OG_HIGH).getX());
-		values.add(strictFindValue(imp2, false, 100) + m.get(OW_LOW).getX());
+		double value1 = strictFindValue(imp, true, 100);
+		double value2 = strictFindValue(imp2, false, 100);
+		if(value1 >-1) {
+			values.add(value1+ m.get(OG_HIGH).getX());
+		}
+		else {
+			values.add(-1.0);
+		}
+		
+		if(value2 >-1) {
+			values.add(value2 + m.get(OW_LOW).getX());			
+		}
+		else {
+			values.add(-1.0);
+		}
 		
 		return values;
 	}
@@ -68,22 +81,37 @@ public class ImageValueFinder  {
 		}
 		Arrays.sort(samples);
 		
+		int firstOverNegative = -1;
+		for ( int t = 0; t<samples.length; t++) {
+			if(samples[t] > -1) {
+				firstOverNegative = t;
+				break;
+			}
+		}
+		if(firstOverNegative == -1) {
+			return -1;
+		}
+		
+		//Only if outliers is removed
+		//int diff = samples[samples.length-1] - samples[firstOverNegative];
+		//int maxDiff = (int)(2*diff*widthHeightRatio);
+		//if(diff > maxDiff) {
+			//return -1;
+		//}
 		int average = 0;
 		int valid = 0;
-		for ( int s = 0; s<samples.length; s ++ ) {
-			if(samples[s] != -1) {
+
+		for ( int s = firstOverNegative; s<samples.length; s ++ ) {
 				valid ++;
 				average += samples[s];
-			}
+			
 		}
 		
 		//TODO: Not removed outliers
-		if(valid == 0) {
-			return -1;
-		}
-		else {
+		
+	
 			return average/valid;			
-		}
+		
 	
 	}
 	

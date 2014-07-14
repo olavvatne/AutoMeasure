@@ -95,7 +95,7 @@ public class FaultDetector {
 		}
 		
 		for(Double value: values) {
-			if(value  == -1) {
+			if(value  < 0) {
 				errorMessage = "No value found for image";
 				return false;
 			}

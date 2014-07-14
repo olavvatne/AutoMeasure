@@ -113,7 +113,7 @@ public class ImageMarkerFinder {
 		table.reset();
 		imp = null;
 		String s = IJ.freeMemory();
-		System.out.println(s + " FREEE MEMORY");
+		//System.out.println(s + " FREEE MEMORY");
 		
 		//en eller annen referanse blir ikke slettet. GB er teit
 		if(markers.size() ==4) {

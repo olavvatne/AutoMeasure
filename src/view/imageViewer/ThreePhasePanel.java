@@ -80,6 +80,8 @@ public class ThreePhasePanel extends JPanel implements MouseListener, MouseMotio
 		if(model != null && model.isMarkersValid()) {
 			this.model = model;
 			setValueLinesSelected(true);
+			System.out.println("MARKERS VALID");
+			System.out.println(this.model.getValues());
 		}
 		else {
 			this.model = new ImageDataModel(model.getDate(), model.getFilePath()); //Kopi av data sånn at man kan hente ut denne og erstatte om man ønsker
@@ -90,6 +92,7 @@ public class ThreePhasePanel extends JPanel implements MouseListener, MouseMotio
 			markers[OW_HIGH] = this.windowWidth/2;
 			this.model.setMarkers(markers);
 			this.model.setValues(new double[2]);
+			System.out.println("WRONG");
 		}
 		this.repaint();
 	}

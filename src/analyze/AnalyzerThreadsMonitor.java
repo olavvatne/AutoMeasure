@@ -36,7 +36,6 @@ public class AnalyzerThreadsMonitor {
 	}
 	
 	public void initThreads(int nrOfThreads) {
-		System.out.println("lol");
 		if(this.analyzerList == null) {
 			System.out.println("tester");
 			pcs.firePropertyChange(Measurer.SETMAX, null, new Integer(this.model.getRowCount()));
