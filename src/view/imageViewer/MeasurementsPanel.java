@@ -60,15 +60,15 @@ public class MeasurementsPanel extends Viewer implements ActionListener, KeyList
 	private void addButtons(JToolBar toolBar) {
 		JButton button = null;
 		toolBar.add( Box.createHorizontalGlue() );
-		button = new JButton("tilbake");
+		button = new JButton("Previous");
         button.setActionCommand(Measurer.PREVIOUS);
-        button.setToolTipText("Neste Bilde");
+        button.setToolTipText("Previous image in table");
         button.addActionListener(this);
         toolBar.add(button);
         
-        button = new JButton("fremover");
+        button = new JButton("Next");
         button.setActionCommand(Measurer.NEXT);
-        button.setToolTipText("forrige bilde");
+        button.setToolTipText("Next image in the table");
         button.addActionListener(this);
         toolBar.add(button);
         

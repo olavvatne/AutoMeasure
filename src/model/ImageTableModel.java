@@ -19,7 +19,7 @@ import automeasurer.Measurer;
 
 
 public class ImageTableModel extends AbstractTableModel implements PropertyChangeListener {
-	private String[] columnNames = {"status", "Date", "Feilmelding"};
+	private String[] columnNames = {"status", "Date", "Error message"};
 	protected ArrayList<ImageDataModel> data;
 	protected HashMap<Integer, String> errorColumn = new HashMap<Integer, String>();
 	protected PropertyChangeSupport pcs;

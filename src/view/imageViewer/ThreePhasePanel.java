@@ -68,14 +68,21 @@ public class ThreePhasePanel extends JPanel implements MouseListener, MouseMotio
 		this.windowWidth = (int)Toolkit.getDefaultToolkit().getScreenSize().getWidth();
 		this.imageWidth = imgWidth;
 		
-		markerValue = MarkerValue.getMarkerValues(data.getId());
-		offset = Offset.getOffset(data.getId());
-		if(data.isMarkersValid()) {
-			this.model = data;
+		setData(data);
+		
+	}
+	
+	
+	public void setData(ImageDataModel model) {
+		markerValue = MarkerValue.getMarkerValues(model.getId());
+		offset = Offset.getOffset(model.getId());
+		
+		if(model != null && model.isMarkersValid()) {
+			this.model = model;
 			setValueLinesSelected(true);
 		}
 		else {
-			this.model = new ImageDataModel(data.getDate(), data.getFilePath()); //Kopi av data sånn at man kan hente ut denne og erstatte om man ønsker
+			this.model = new ImageDataModel(model.getDate(), model.getFilePath()); //Kopi av data sånn at man kan hente ut denne og erstatte om man ønsker
 			double[] markers = new double[4];
 			markers[OG_HIGH] = this.windowWidth/5;
 			markers[OG_LOW] = this.windowWidth/4;
@@ -84,13 +91,6 @@ public class ThreePhasePanel extends JPanel implements MouseListener, MouseMotio
 			this.model.setMarkers(markers);
 			this.model.setValues(new double[2]);
 		}
-	}
-	
-	
-	public void setData(ImageDataModel model) {
-		this.model = model;
-		markerValue = MarkerValue.getMarkerValues(model.getId());
-		offset = Offset.getOffset(model.getId());
 		this.repaint();
 	}
 	

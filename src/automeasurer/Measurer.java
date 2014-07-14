@@ -71,7 +71,7 @@ public class Measurer {
 		//frame.setMinimumSize(new Dimension((int)(sz.getWidth()/2), (int)(sz.getHeight()/2)));
 		//frame.setPreferredSize(sz);// må vekk for at minimering skal faktisk minimere, maximize forårsaker layout krøll med initflytting
 		frame.setLocation(sz.width/10 , sz.height/10);
-		frame.setTitle("innlesning");
+		frame.setTitle("AutoMeasurer");
 		ImageIcon c = new ImageIcon(Measurer.class.getResource("/measure.png"));
 		frame.setIconImage(c.getImage());
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

@@ -58,7 +58,7 @@ public class OpenFoldersPanel extends JPanel implements ActionListener {
 	
 	
 	private void initComponents(JPanel parentPanel) {
-		JButton button = new JButton("åpne folder");
+		JButton button = new JButton("Open folder");
 		button.addActionListener(this);
 		this.add(button);
 		button.addActionListener((ActionListener)parentPanel);
@@ -176,7 +176,7 @@ public class OpenFoldersPanel extends JPanel implements ActionListener {
 	}
 
 	public void actionPerformed(ActionEvent e) {
-		boolean state = findPictureFiles("Velg mappe " + counter);
+		boolean state = findPictureFiles("Choose folder " + counter);
 		if(state) {
 			counter ++;
 		}
