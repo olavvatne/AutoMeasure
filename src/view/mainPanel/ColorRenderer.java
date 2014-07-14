@@ -48,6 +48,9 @@ public class ColorRenderer extends JLabel
     	else if (Status.WORKED_ON == (Status) status) {
     		newColor = Color.blue;
     	}
+    	else if (Status.MANUAL_EDIT == (Status) status) {
+    		newColor = Color.cyan;
+    	}
     	else {
     		newColor = Color.gray;
     	}

@@ -20,6 +20,7 @@ import javax.swing.JPanel;
 import model.ImageDataModel;
 import model.MarkerValue;
 import model.Offset;
+import model.Status;
 import analyze.ImageMarkerPoint;
 
 
@@ -62,6 +63,8 @@ public class ThreePhasePanel extends JPanel implements MouseListener, MouseMotio
 	private boolean[] isValueLineSelected = new boolean[2];
 	private int selected = NO_SELECTION;
 	private boolean isOffsetDirty = false;
+	private boolean isValuesDirty = false;
+	private boolean isMarkersDirty = false;
 	
 	public ThreePhasePanel(ImageDataModel data, int imgWidth) {
 		
@@ -149,6 +152,7 @@ public class ThreePhasePanel extends JPanel implements MouseListener, MouseMotio
 	
 	private void setLinePos(int i, double value, boolean withOffset) {
 		if (i<NR_OF_MARKERS) {
+			isMarkersDirty = true;
 			if (withOffset) {
 				if (i%2== 0) {
 					double offset = getOffset(model.getMarkerXPosition(i), model.getMarkerXPosition(i+1), this.offset.get(i));
@@ -189,6 +193,7 @@ public class ThreePhasePanel extends JPanel implements MouseListener, MouseMotio
 	
 	private void setValueLinePos(int i, double value) {
 		if(i<NR_OF_VALUEPOINTS) {
+			this.isValuesDirty = true;
 			this.model.setValuesXPosition(i, ((value/this.windowWidth)*this.imageWidth));
 		}
 	}
@@ -407,6 +412,9 @@ public class ThreePhasePanel extends JPanel implements MouseListener, MouseMotio
 	public void close() {
 		if(isOffsetDirty) {
 			Offset.changeOffset(this.model.getId(), this.offset, true);
+		}
+		if(isValuesDirty || isOffsetDirty || isMarkersDirty) {
+			this.model.setStatus(Status.MANUAL_EDIT);
 		}
 	}
 }

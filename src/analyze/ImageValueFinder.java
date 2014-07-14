@@ -36,22 +36,10 @@ public class ImageValueFinder  {
 		imp2 = crop(imp2, m.get(OW_LOW), m.get(OW_HIGH));
 		
 		List<Double> values = new ArrayList<Double>();
-		double value1 = strictFindValue(imp, true, 100);
-		double value2 = strictFindValue(imp2, false, 100);
-		if(value1 >-1) {
-			values.add(value1+ m.get(OG_HIGH).getX());
-		}
-		else {
-			values.add(-1.0);
-		}
-		
-		if(value2 >-1) {
-			values.add(value2 + m.get(OW_LOW).getX());			
-		}
-		else {
-			values.add(-1.0);
-		}
-		
+		double value1 = strictFindValue(imp, true, 120, m.get(OG_HIGH).getX());
+		double value2 = strictFindValue(imp2, false, 120,  m.get(OW_LOW).getX());
+			values.add(value1);
+			values.add(value2);			
 		return values;
 	}
 	
@@ -66,7 +54,7 @@ public class ImageValueFinder  {
 	 * @return Return the average where invalid samples has been removed.
 	 */
 	
-	private static double strictFindValue(ImagePlus imp, boolean left, int sampleSize) {
+	private static double strictFindValue(ImagePlus imp, boolean left, int sampleSize, double toBeAdded) {
 		IJ.run(imp, "8-bit", "");
 		IJ.run(imp, "Smooth", "");
 		IJ.run(imp, "Smooth", "");
@@ -92,6 +80,12 @@ public class ImageValueFinder  {
 			return -1;
 		}
 		
+		int samplePrune = 0;
+		if((samples.length-1 -samplePrune) -(firstOverNegative + samplePrune) <= 0) {
+			//to few valid samples;
+			return -1;
+		}
+		System.out.println("SAMPLES LEFT: " + ((samples.length-1 -samplePrune) - (firstOverNegative + samplePrune)));
 		//Only if outliers is removed
 		//int diff = samples[samples.length-1] - samples[firstOverNegative];
 		//int maxDiff = (int)(2*diff*widthHeightRatio);
@@ -101,7 +95,7 @@ public class ImageValueFinder  {
 		int average = 0;
 		int valid = 0;
 
-		for ( int s = firstOverNegative; s<samples.length; s ++ ) {
+		for ( int s = firstOverNegative+ samplePrune; s<samples.length- samplePrune; s ++ ) {
 				valid ++;
 				average += samples[s];
 			
@@ -110,7 +104,7 @@ public class ImageValueFinder  {
 		//TODO: Not removed outliers
 		
 	
-			return average/valid;			
+			return (average/valid) + toBeAdded;			
 		
 	
 	}
