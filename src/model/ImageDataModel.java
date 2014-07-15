@@ -6,7 +6,8 @@ import java.util.Date;
 import java.util.List;
 
 import utilities.ExcelModel;
-import utilities.Measurement;
+import utilities.measurement.Measurement;
+import utilities.measurement.ValueMeasurement;
 import analyze.ImageMarkerPoint;
 
 /**
@@ -76,7 +77,8 @@ public class ImageDataModel implements ExcelModel {
 		return markers;
 	}
 	public boolean isMarkersValid() {
-		if(this.markers != null) {
+		if(this.markers != null &&
+				(this.status == Status.SUCCESS || this.status == Status.MANUAL_EDIT)) {
 			return true;
 		}
 		else {
@@ -97,7 +99,7 @@ public class ImageDataModel implements ExcelModel {
 	}
 	
 	public double getValuesXPosition(int i) {
-		if (markers != null &&  i< values.length) {
+		if (values != null &&  i< values.length) {
 			return this.values[i];
 		}
 		return -1;
@@ -156,8 +158,8 @@ public class ImageDataModel implements ExcelModel {
 	}
 	
 	public double[] getMeasurementValues() {
-		if (status == Status.SUCCESS && isMarkersValid()) {
-			Measurement valueCalculator = Measurement.calculator();
+		if (isMarkersValid()) {
+			ValueMeasurement valueCalculator = Measurement.calculator();
 			valueCalculator.setCalculator(Offset.getOffset(id), MarkerValue.getMarkerValues(this.id), markers, values);
 			return new double[]{valueCalculator.getThreePhaseValue(OW_VALUE), valueCalculator.getThreePhaseValue(OG_VALUE)};
 		}

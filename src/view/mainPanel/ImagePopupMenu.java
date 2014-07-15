@@ -20,6 +20,7 @@ import model.ImageTableModel;
  * 
  * 	- Open containing folder - Open a finder/explorer window with the the content of the folder the image belongs to
  *  - Open image - Open the image currently selected in an external program, like window image viewer.
+ *  
  * @author Olav
  *
  */
