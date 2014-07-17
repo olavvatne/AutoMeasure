@@ -67,7 +67,8 @@ public class ThreePhasePanel extends JPanel implements MouseListener, MouseMotio
 	 */
 	public ThreePhasePanel(ImageDataModel data, int imgWidth) {
 		
-		//TODO: First image marker is not correctly placed. Just first image.
+		//To avoid markers getting placed whenever, the windowWidth is set to the screen width initially.
+		//setData will override the value anyways. TODO: See if a repaint before setting the windowWidth will work in setData
 		this.windowWidth = (int)Toolkit.getDefaultToolkit().getScreenSize().getWidth();
 		this.imageWidth = imgWidth;
 		
@@ -77,7 +78,7 @@ public class ThreePhasePanel extends JPanel implements MouseListener, MouseMotio
 	
 	
 	public void setData(ImageDataModel model) {
-		this.windowWidth = (int)Toolkit.getDefaultToolkit().getScreenSize().getWidth();
+		
 		markerValue = MarkerValue.getMarkerValues(model.getId());
 		offset = Offset.getOffset(model.getId());
 		calc = new Measurement();
@@ -95,8 +96,9 @@ public class ThreePhasePanel extends JPanel implements MouseListener, MouseMotio
 				markers[Measurement.OW_HIGH] = this.windowWidth/2;
 				this.model.setMarkers(markers);
 			}
+			setWindowWidth((int)this.getWidth());
 			calc.setCalculator(offset, markerValue, this.model.getMarkers(), this.model.getValues());
-			calc.setGuiValues(this.imageWidth, this.windowWidth);
+			
 		}
 		this.repaint();
 	}
