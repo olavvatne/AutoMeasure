@@ -4,8 +4,8 @@ import java.awt.Color;
 
 /**
  * Enum for status of a data model.
- * Image analysis gives unreliable results and the status
- * categories the analysis quality, and status.
+ * Image analysis gives unreliable results and therefore a enum is needed to
+ * categorize the analysis result.
  * @author Olav
  *
  */

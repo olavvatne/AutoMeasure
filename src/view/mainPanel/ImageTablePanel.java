@@ -48,10 +48,6 @@ public class ImageTablePanel extends JPanel implements MouseListener, PropertyCh
 		this.setBorder(new EmptyBorder(new Insets(10, 10, 10, 10)));
 	}
 	
-	
-	
-	
-	
 	private void openMeasurementPanel(MouseEvent e) {
 		int rowInTable = imageTable.getSelectedRow();
 		int row = imageTable.convertRowIndexToModel(rowInTable);

@@ -85,6 +85,8 @@ public class Viewer extends JPanel {
 			protected ImageIcon doInBackground() throws Exception {
 				if (img == null) {
 					img = readImg(file);
+					threePhasePanel.setImageWidth(img.getWidth());
+					System.out.println(img.getWidth());
 				}
 				return getScaledImage(img);
 			}
