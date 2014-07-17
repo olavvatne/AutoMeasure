@@ -63,8 +63,9 @@ public class CalibratePanel extends Viewer implements ActionListener {
         if (Measurer.ANALYZE_IMAGE.equals(cmd))
         {
         	List<ImageMarkerPoint> markers =ImageMarkerFinder.run(data.getFilePath());
+
 			if(markers != null) {
-				 
+				System.out.println(markers.size());
 				data.setMarkers(markers);
 				threePhasePanel.setData(data);
 			}

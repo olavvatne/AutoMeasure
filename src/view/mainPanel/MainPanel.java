@@ -114,6 +114,7 @@ public class MainPanel extends JPanel implements ActionListener, PropertyChangeL
         	
         }
         else if (Measurer.CALIBRATE.equals(cmd)) {
+        	//gets the first image in the list of all images. To calibrate analyzer.
         	ImageDataModel data = this.model.getDataModel(0);
         	
 			Viewer panel = new CalibratePanel(data);
@@ -125,7 +126,6 @@ public class MainPanel extends JPanel implements ActionListener, PropertyChangeL
 			frame.add(panel);
 			frame.setVisible(true);
 			frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-			System.out.println(data.getFilePath());
 			
 			
 			this.toolBar.setButtonEnabled(Measurer.ANALYZE, true);

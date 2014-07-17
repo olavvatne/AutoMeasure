@@ -77,6 +77,7 @@ public class ThreePhasePanel extends JPanel implements MouseListener, MouseMotio
 	
 	
 	public void setData(ImageDataModel model) {
+		this.windowWidth = (int)Toolkit.getDefaultToolkit().getScreenSize().getWidth();
 		markerValue = MarkerValue.getMarkerValues(model.getId());
 		offset = Offset.getOffset(model.getId());
 		calc = new Measurement();
@@ -86,7 +87,7 @@ public class ThreePhasePanel extends JPanel implements MouseListener, MouseMotio
 			this.model = model;
 			setValueLinesSelected(true);
 
-			if(!model.isMarkersValid()) {
+			if(model.getMarkers() == null) {
 				double[] markers = new double[4];
 				markers[Measurement.OG_HIGH] = this.windowWidth/5;
 				markers[Measurement.OG_LOW] = this.windowWidth/4;
