@@ -182,27 +182,8 @@ public class ThreePhasePanel extends JPanel implements MouseListener, MouseMotio
 	}
 	
 	private void paintStatusRectangle(Graphics2D g) {
-		Status status = this.model.getStatus();
-		
-		//TODO: Better way
-		Color newColor = null;
-    	if(Status.FAILURE == (Status) status) {
-    		newColor = Color.red;
-    	}
-    	else if (Status.SUCCESS == (Status) status) {
-    		newColor = Color.green;
-    	}
-    	else if (Status.WORKED_ON == (Status) status) {
-    		newColor = Color.blue;
-    	}
-    	else if (Status.MANUAL_EDIT == (Status) status) {
-    		newColor = Color.cyan;
-    	}
-    	else {
-    		newColor = Color.gray;
-    	}
-    	
-    	g.setColor(newColor);
+		Status status = this.model.getStatus();    	
+    	g.setColor(status.color());
     	g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER,(float)0.3f));
     	g.fillRect(10, 10, 30, 30);
 	}

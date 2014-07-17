@@ -38,22 +38,8 @@ public class ColorRenderer extends JLabel
                             JTable table, Object status,
                             boolean isSelected, boolean hasFocus,
                             int row, int column) {
-    	Color newColor = null;
-    	if(Status.FAILURE == (Status) status) {
-    		newColor = Color.red;
-    	}
-    	else if (Status.SUCCESS == (Status) status) {
-    		newColor = Color.green;
-    	}
-    	else if (Status.WORKED_ON == (Status) status) {
-    		newColor = Color.blue;
-    	}
-    	else if (Status.MANUAL_EDIT == (Status) status) {
-    		newColor = Color.cyan;
-    	}
-    	else {
-    		newColor = Color.gray;
-    	}
+    	Color newColor = ((Status)status).color();
+    	
         setBackground(newColor);
         if (isBordered) {
             if (isSelected) {
