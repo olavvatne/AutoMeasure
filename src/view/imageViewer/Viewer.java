@@ -47,9 +47,10 @@ public class Viewer extends JPanel {
 		
 		
 		
-		readIconInBackground(new File(path));
+		
 		
 		this.threePhasePanel = new ThreePhasePanel(this.data, 2464);
+		readIconInBackground(new File(path));
 		this.threePhasePanel.setOpaque(false);
 		this.addMouseListener(threePhasePanel);
 		this.addMouseMotionListener(threePhasePanel);
@@ -60,8 +61,9 @@ public class Viewer extends JPanel {
 		
 		this.path = data.getFilePath();
 		this.img = null;
-		readIconInBackground(new File(path));
+		
 		this.threePhasePanel.setData(data);
+		readIconInBackground(new File(path));
 		this.data = data;
 		
 	}
