@@ -34,18 +34,12 @@ import model.Status;
 public class ThreePhasePanel extends JPanel implements MouseListener, MouseMotionListener {
 	
 	public static final int NO_SELECTION = -1;
-	public static final int OW_HIGH = 3;
-	public static final int OW_LOW = 2;
-	public static final int OG_HIGH = 0;
-	public static final int OG_LOW = 1;
 	
 	public static final int OW_HIGH_OFFSET = 7;
 	public static final int OW_LOW_OFFSET = 6;
 	public static final int OG_HIGH_OFFSET = 4;
 	public static final int OG_LOW_OFFSET = 5;
 	
-	public static final int OG_VALUE = 0;
-	public static final int OW_VALUE = 1;
 	public static final int NR_OF_MARKERS =4;
 	public static final int NR_OF_VALUEPOINTS =2;
 	public static final int PADDING = 50;
@@ -61,7 +55,7 @@ public class ThreePhasePanel extends JPanel implements MouseListener, MouseMotio
 	private List<Double> offset;
 	private boolean[] isValueLineSelected = new boolean[2];
 	private int selected = NO_SELECTION;
-	private Measurement calc = new Measurement();
+	private Measurement calc;
 	
 	private boolean isOffsetDirty = false;
 	
@@ -85,6 +79,8 @@ public class ThreePhasePanel extends JPanel implements MouseListener, MouseMotio
 	public void setData(ImageDataModel model) {
 		markerValue = MarkerValue.getMarkerValues(model.getId());
 		offset = Offset.getOffset(model.getId());
+		calc = new Measurement();
+		this.isOffsetDirty = false;
 		
 		if(model != null) {
 			this.model = model;
@@ -92,10 +88,10 @@ public class ThreePhasePanel extends JPanel implements MouseListener, MouseMotio
 
 			if(!model.isMarkersValid()) {
 				double[] markers = new double[4];
-				markers[OG_HIGH] = this.windowWidth/5;
-				markers[OG_LOW] = this.windowWidth/4;
-				markers[OW_LOW] = this.windowWidth/3;
-				markers[OW_HIGH] = this.windowWidth/2;
+				markers[Measurement.OG_HIGH] = this.windowWidth/5;
+				markers[Measurement.OG_LOW] = this.windowWidth/4;
+				markers[Measurement.OW_LOW] = this.windowWidth/3;
+				markers[Measurement.OW_HIGH] = this.windowWidth/2;
 				this.model.setMarkers(markers);
 			}
 			calc.setCalculator(offset, markerValue, this.model.getMarkers(), this.model.getValues());
@@ -151,18 +147,18 @@ public class ThreePhasePanel extends JPanel implements MouseListener, MouseMotio
     	
     	//OW
     	boolean notOffsetMarker = false;
-    	paintLineSlider(g, "Start O/W", OW_LOW, (int)calc.getLinePos(OW_LOW , notOffsetMarker) , notOffsetMarker, LIGHT_BLUE);
-    	paintLineSlider(g, "End O/W", OW_HIGH, (int)calc.getLinePos(OW_HIGH , notOffsetMarker) , notOffsetMarker, LIGHT_BLUE);
-    	paintLineSlider(g, "test O/W", OW_LOW_OFFSET, (int)calc.getLinePos(OW_LOW , !notOffsetMarker) , !notOffsetMarker, LIGHT_BLUE);
-    	paintLineSlider(g, "test O/W", OW_HIGH_OFFSET, (int)calc.getLinePos(OW_HIGH , !notOffsetMarker) , !notOffsetMarker, LIGHT_BLUE);
-    	paintLine(g, "O/W", OW_VALUE, calc.getThreePhaseValue(OW_VALUE), LIGHT_BLUE);
+    	paintLineSlider(g, "Start O/W", Measurement.OW_LOW, (int)calc.getLinePos(Measurement.OW_LOW , notOffsetMarker) , notOffsetMarker, LIGHT_BLUE);
+    	paintLineSlider(g, "End O/W", Measurement.OW_HIGH, (int)calc.getLinePos(Measurement.OW_HIGH , notOffsetMarker) , notOffsetMarker, LIGHT_BLUE);
+    	paintLineSlider(g, "test O/W", OW_LOW_OFFSET, (int)calc.getLinePos(Measurement.OW_LOW , !notOffsetMarker) , !notOffsetMarker, LIGHT_BLUE);
+    	paintLineSlider(g, "test O/W", OW_HIGH_OFFSET, (int)calc.getLinePos(Measurement.OW_HIGH , !notOffsetMarker) , !notOffsetMarker, LIGHT_BLUE);
+    	paintLine(g, "O/W", Measurement.OW_VALUE, calc.getThreePhaseValue(Measurement.OW_VALUE), LIGHT_BLUE);
     	
     	//OG
-    	paintLineSlider(g, "Start O/G", OG_LOW, (int)calc.getLinePos(OG_LOW , notOffsetMarker) , notOffsetMarker, LIGHT_RED);
-    	paintLineSlider(g, "End O/G", OG_HIGH, (int)calc.getLinePos(OG_HIGH , notOffsetMarker) , notOffsetMarker, LIGHT_RED);
-    	paintLineSlider(g, "test O/W", OG_LOW_OFFSET, (int)calc.getLinePos(OG_LOW , !notOffsetMarker) , !notOffsetMarker, LIGHT_RED);
-    	paintLineSlider(g, "test O/W", OG_HIGH_OFFSET, (int)calc.getLinePos(OG_HIGH , !notOffsetMarker) , !notOffsetMarker , LIGHT_RED);
-    	paintLine(g, "O/G", OG_VALUE, calc.getThreePhaseValue(OG_VALUE), LIGHT_RED);
+    	paintLineSlider(g, "Start O/G", Measurement.OG_LOW, (int)calc.getLinePos(Measurement.OG_LOW , notOffsetMarker) , notOffsetMarker, LIGHT_RED);
+    	paintLineSlider(g, "End O/G", Measurement.OG_HIGH, (int)calc.getLinePos(Measurement.OG_HIGH , notOffsetMarker) , notOffsetMarker, LIGHT_RED);
+    	paintLineSlider(g, "test O/W", OG_LOW_OFFSET, (int)calc.getLinePos(Measurement.OG_LOW , !notOffsetMarker) , !notOffsetMarker, LIGHT_RED);
+    	paintLineSlider(g, "test O/W", OG_HIGH_OFFSET, (int)calc.getLinePos(Measurement.OG_HIGH , !notOffsetMarker) , !notOffsetMarker , LIGHT_RED);
+    	paintLine(g, "O/G", Measurement.OG_VALUE, calc.getThreePhaseValue(Measurement.OG_VALUE), LIGHT_RED);
     }
 	
 	
@@ -220,23 +216,23 @@ public class ThreePhasePanel extends JPanel implements MouseListener, MouseMotio
 		if (selected == NO_SELECTION) {
 			if(e.getButton() == MouseEvent.BUTTON3){
 				if (e.getClickCount() > 1) {
-					setValueLineSelected(OW_VALUE, false);
+					setValueLineSelected(Measurement.OW_VALUE, false);
 					selected = NO_SELECTION;
 				}
 				else {
-					calc.setValueLinePos(OW_VALUE, (double)e.getX());
-					setValueLineSelected(OW_VALUE, true);
+					calc.setValueLinePos(Measurement.OW_VALUE, (double)e.getX());
+					setValueLineSelected(Measurement.OW_VALUE, true);
 					selected = NO_SELECTION;
 				}
 			}
 			else if(e.getButton() == MouseEvent.BUTTON1){
 				if(e.getClickCount() >1) {
-					setValueLineSelected(OG_VALUE, false);
+					setValueLineSelected(Measurement.OG_VALUE, false);
 					selected = NO_SELECTION;
 				}
 				else {
-					calc.setValueLinePos(OG_VALUE, (double)e.getX());
-					setValueLineSelected(OG_VALUE, true);
+					calc.setValueLinePos(Measurement.OG_VALUE, (double)e.getX());
+					setValueLineSelected(Measurement.OG_VALUE, true);
 					selected = NO_SELECTION;
 				}
 
@@ -253,7 +249,7 @@ public class ThreePhasePanel extends JPanel implements MouseListener, MouseMotio
 			}
 			else {
 				//TODO: Store new offset on window close etc
-				this.offset.set(selected-NR_OF_MARKERS, getNewPercentage(selected, e.getX()));
+				this.offset.set(selected-NR_OF_MARKERS, calc.getNewPercentage(selected, e.getX()));
 				//ImageDataModel.offset[selected-NR_OF_MARKERS] = getNewPercentage(selected, e.getX());
 				isOffsetDirty = true;
 			}
@@ -270,7 +266,7 @@ public class ThreePhasePanel extends JPanel implements MouseListener, MouseMotio
 				calc.setLinePos(selected, e.getX(), false);
 			}
 			else {
-				this.offset.set(selected-NR_OF_MARKERS, getNewPercentage(selected, e.getX()));
+				this.offset.set(selected-NR_OF_MARKERS, calc.getNewPercentage(selected, e.getX()));
 				//ImageDataModel.offset[selected-NR_OF_MARKERS] = getNewPercentage(selected, e.getX());
 			}
 			
@@ -281,32 +277,6 @@ public class ThreePhasePanel extends JPanel implements MouseListener, MouseMotio
 	
 	public void mouseMoved(MouseEvent e) {
 	}
-	
-	
-	/**
-	 * Returns a new percentage for the offset
-	 * 
-	 * @param selected -Offset line that is selected by user
-	 * @param pos - The new position of the offset
-	 * @return
-	 */
-	public double getNewPercentage(int selected, int pos) {
-		double x1;
-		double x2;
-		if(selected%2 == 0) {
-			x1 = calc.getLinePos(selected-NR_OF_MARKERS, false);
-			x2 = calc.getLinePos(selected-NR_OF_MARKERS +1, false);
-			//legge inn sperringer om pos er mindre enn 0 eller større enn andre siden av menisk
-			return Math.abs((pos-x1)/(x1-x2));
-		}
-		else {
-			x1 = calc.getLinePos(selected-NR_OF_MARKERS, false);
-			x2 = calc.getLinePos(selected-NR_OF_MARKERS-1, false);
-			return Math.abs((pos-x1)/(x1-x2));
-			
-		}	
-	}
-	
 	
 	public void close() {
 		if(isOffsetDirty) {

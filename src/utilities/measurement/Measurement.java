@@ -222,6 +222,32 @@ public class Measurement implements ValueMeasurement {
 		return markerValue.get(i);
 	}
 	
+	
+	/**
+	 * Returns a new percentage for the offset
+	 * 
+	 * @param selected -Offset line that is selected by user
+	 * @param pos - The new position of the offset
+	 * @return
+	 */
+	public double getNewPercentage(int selected, int pos) {
+		double x1;
+		double x2;
+		int nr = NR_OF_THREEPHASE_MARKERS;
+		if(selected%2 == 0) {
+			x1 = getLinePos(selected-nr, false);
+			x2 = getLinePos(selected-nr +1, false);
+			//legge inn sperringer om pos er mindre enn 0 eller større enn andre siden av menisk
+			return Math.abs((pos-x1)/(x1-x2));
+		}
+		else {
+			x1 = getLinePos(selected-nr, false);
+			x2 = getLinePos(selected-nr-1, false);
+			return Math.abs((pos-x1)/(x1-x2));
+			
+		}	
+	}
+	
 	/**
 	 * If any setters has been used, the Measurement is set to dirty.
 	 * It has changed since initialization.

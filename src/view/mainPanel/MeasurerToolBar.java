@@ -44,11 +44,14 @@ public class MeasurerToolBar extends JToolBar {
 		map.put(button, new String[]{"/open.png", "/openhover.png", "/openClick.png"});
 		this.add(button);
 		this.add(Box.createHorizontalStrut(10));
+		
 		button = makeToolBarButton("/save.png", Measurer.SAVE, "lagre til excel", "Lagre", listener);
 		map.put(button, new String[]{"/save.png", "/saveHover.png", "/saveClick.png"});
 		button.setEnabled(false);
 		this.add(button);
+		this.addSeparator();
 		this.add( Box.createHorizontalGlue() );
+		this.addSeparator();
 		button = makeToolBarButton("/calibrate.png", Measurer.CALIBRATE, "kalibrer", "Kalibrer", listener);
 		map.put(button, new String[]{"/calibrate.png", "/calibratehover.png", "/calibrateClick.png"});
 		this.add(button);
@@ -84,7 +87,7 @@ public class MeasurerToolBar extends JToolBar {
 		button.setActionCommand(actionCommand);
 		button.setToolTipText(toolTipText);
 		button.addActionListener(listener);
-		
+		button.setFocusPainted(false);
 		setIconForButton(button, imageName, altText);	
 		button.addMouseListener(new MouseListener() {
 			public void mouseEntered(MouseEvent e) {
