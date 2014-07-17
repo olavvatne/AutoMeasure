@@ -27,7 +27,6 @@ import model.Status;
 /**
  * The view layer containing all measurement lines, and adjusters. Its basically an overlay for the image.
  * 
- * TODO: A bit logic heavy 
  *  @author Olav
  *
  */
@@ -70,13 +69,18 @@ public class ThreePhasePanel extends JPanel implements MouseListener, MouseMotio
 		//To avoid markers getting placed whenever, the windowWidth is set to the screen width initially.
 		//setData will override the value anyways. TODO: See if a repaint before setting the windowWidth will work in setData
 		this.windowWidth = (int)Toolkit.getDefaultToolkit().getScreenSize().getWidth();
-		this.imageWidth = imgWidth;
+		this.imageWidth = imgWidth; //TODO: use a setter instead.
 		
 		setData(data);
 		
 	}
 	
-	
+	/**
+	 * If previous or next has been clicked or an image is opened from the imageTable, the setData method has to be run either way.
+	 * This method is crucial for initializing a threePhasePanel. It creates a new calculator,
+	 * reset dirty flags, and distribute the markers evenly if no markers is found in the model.
+	 * @param model
+	 */
 	public void setData(ImageDataModel model) {
 		
 		markerValue = MarkerValue.getMarkerValues(model.getId());
@@ -103,7 +107,11 @@ public class ThreePhasePanel extends JPanel implements MouseListener, MouseMotio
 		this.repaint();
 	}
 	
-	
+	/**
+	 * When the Jframe is being resized this method has to be called to update the windowWidth.
+	 * This variable is important for calculating position of markers in the frame.
+	 * @param w - new panel width
+	 */
 	public void setWindowWidth(int w) {
 		this.windowWidth = w;
 		calc.setGuiValues(this.imageWidth, w);
@@ -131,7 +139,10 @@ public class ThreePhasePanel extends JPanel implements MouseListener, MouseMotio
 		}
 	}
 	
-	
+	/**
+	 * Overridden paintComponent, which is called whenever the panel should be repainted.
+	 * It basically calls paintOverlay which is responsible for drawing all lines in the overlay.
+	 */
 	protected void paintComponent(Graphics gOrig) {
         super.paintComponent(gOrig);
         Graphics2D g = (Graphics2D) gOrig.create();
@@ -142,7 +153,11 @@ public class ThreePhasePanel extends JPanel implements MouseListener, MouseMotio
         }
     }
 	
-	
+	/**
+	 * PaintOverlay paints all values, lines and text in the overlay.
+	 * It often calls methods in the Measurement calculator which return the pixel position where a line should be placed.
+	 * @param g - a graphics component used to draw lines and text etc
+	 */
 	private void paintOverlay(Graphics2D g) {
 		g.setStroke (new BasicStroke(1.0f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND, 10.0f, null, 0.0f));
     	g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER,(float)0.8f));
@@ -164,7 +179,18 @@ public class ThreePhasePanel extends JPanel implements MouseListener, MouseMotio
     	paintLine(g, "O/G", Measurement.OG_VALUE, calc.getThreePhaseValue(Measurement.OG_VALUE), LIGHT_RED);
     }
 	
-	
+	/**
+	 * Called from paintComponent. A convenience method for painting a single line.
+	 * In each panel there is 4 lines, so a method is a good idea.
+	 * Each line has a text on top of a vertical line going across the screen. A small oval is drawn to indicate that
+	 * the line can be dragged.
+	 * @param g
+	 * @param header What to write over the line
+	 * @param type If its selected line is drawn in a darker color
+	 * @param pos What pixel column to draw line 
+	 * @param offsetMarker If this line actually is a offsetMarker. Shorter line basically.
+	 * @param c What color to draw line and text
+	 */
 	private void paintLineSlider(Graphics2D g, String header, int type, int pos, boolean offsetMarker, Color c) {
 		g.setFont(new Font("Arial", Font.PLAIN, 15));
 		g.setPaint(c);
@@ -178,7 +204,14 @@ public class ThreePhasePanel extends JPanel implements MouseListener, MouseMotio
     	g.fillOval(pos-5, (this.getHeight()-60)/2, 10, 10);
 	}
 	
-	
+	/**
+	 * Very similar to the paintLineSlider, but with no oval to indicate that its draggable.
+	 * @param g
+	 * @param header What to write over the line
+	 * @param type What line it is. Used to get exact pixel position.
+	 * @param value A value that will be drawn. 
+	 * @param c
+	 */
 	private void paintLine(Graphics2D g, String header, int type,double value, Color c) {
 		if(isValueLineSelected(type)) {
 			g.setFont(new Font("Arial", Font.BOLD, 20));
@@ -200,7 +233,12 @@ public class ThreePhasePanel extends JPanel implements MouseListener, MouseMotio
 		
 	}
 	
-	
+	/**
+	 * If mouse is pressed anywhere in the panel this method is called.
+	 * It checks the lines currently in the panel, and sets the line actually clicked on to be the selected one.
+	 * If the mouse click is not over a marker line, it checks if this was a right or left click. If it was the value line
+	 * of either OW or OG is set using setValueLineSelected.
+	 */
 	public void mousePressed(MouseEvent e) {
 		//hvis endring er enabled eller noe.
 		for(int i = 0; i<NR_OF_MARKERS; i ++) {
@@ -244,14 +282,16 @@ public class ThreePhasePanel extends JPanel implements MouseListener, MouseMotio
 		this.repaint();
 	}
 	
-	
+	/**
+	 * Marker lines are dragged. When user release mouse button this method is called. It checks that a marker has been selected
+	 * by mousePressed. If this is the case, the new position of the marker line is recorded using the Measurements setLinePos
+	 */
 	public void mouseReleased(MouseEvent e) {
 		if(selected != NO_SELECTION) {
 			if(selected < NR_OF_MARKERS) {
 				calc.setLinePos(selected, e.getX(), false);
 			}
 			else {
-				//TODO: Store new offset on window close etc
 				this.offset.set(selected-NR_OF_MARKERS, calc.getNewPercentage(selected, e.getX()));
 				//ImageDataModel.offset[selected-NR_OF_MARKERS] = getNewPercentage(selected, e.getX());
 				isOffsetDirty = true;
@@ -262,7 +302,11 @@ public class ThreePhasePanel extends JPanel implements MouseListener, MouseMotio
 		this.repaint();
 	}
 	
-	
+	/**
+	 * When user is dragging his/her mouse across the screen this method is called. 
+	 * Because marker lines is draggable , it has to be redrawn alot,
+	 * therefore the markerValue is recorded during the drag from point A to point B
+	 */
 	public void mouseDragged(MouseEvent e) {
 		if (selected != NO_SELECTION) {
 			if (selected < NR_OF_MARKERS) {
@@ -281,6 +325,11 @@ public class ThreePhasePanel extends JPanel implements MouseListener, MouseMotio
 	public void mouseMoved(MouseEvent e) {
 	}
 	
+	/**
+	 * Before closing a threephasePanel this method should be called. It checks to see if any of the flags has become dirty while the 
+	 * panel has been shown. If it has become dirty the offset is changed, and in all cased will the status be set to MANUAL_EDIT
+	 * to indicate that this is a changed value from the initial analyzing phase.
+	 */
 	public void close() {
 		if(isOffsetDirty) {
 			Offset.changeOffset(this.model.getId(), this.offset, true);
