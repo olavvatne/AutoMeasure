@@ -177,8 +177,35 @@ public class ThreePhasePanel extends JPanel implements MouseListener, MouseMotio
     	paintLineSlider(g, "test O/W", OG_LOW_OFFSET, (int)calc.getLinePos(Measurement.OG_LOW , !notOffsetMarker) , !notOffsetMarker, LIGHT_RED);
     	paintLineSlider(g, "test O/W", OG_HIGH_OFFSET, (int)calc.getLinePos(Measurement.OG_HIGH , !notOffsetMarker) , !notOffsetMarker , LIGHT_RED);
     	paintLine(g, "O/G", Measurement.OG_VALUE, calc.getThreePhaseValue(Measurement.OG_VALUE), LIGHT_RED);
-    }
+    	
+    	paintStatusRectangle(g);
+	}
 	
+	private void paintStatusRectangle(Graphics2D g) {
+		Status status = this.model.getStatus();
+		
+		//TODO: Better way
+		Color newColor = null;
+    	if(Status.FAILURE == (Status) status) {
+    		newColor = Color.red;
+    	}
+    	else if (Status.SUCCESS == (Status) status) {
+    		newColor = Color.green;
+    	}
+    	else if (Status.WORKED_ON == (Status) status) {
+    		newColor = Color.blue;
+    	}
+    	else if (Status.MANUAL_EDIT == (Status) status) {
+    		newColor = Color.cyan;
+    	}
+    	else {
+    		newColor = Color.gray;
+    	}
+    	
+    	g.setColor(newColor);
+    	g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER,(float)0.3f));
+    	g.fillRect(10, 10, 30, 30);
+	}
 	/**
 	 * Called from paintComponent. A convenience method for painting a single line.
 	 * In each panel there is 4 lines, so a method is a good idea.
