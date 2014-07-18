@@ -49,7 +49,7 @@ public class Viewer extends JPanel {
 		
 		
 		
-		this.threePhasePanel = new ThreePhasePanel(this.data, 2464);
+		this.threePhasePanel = new ThreePhasePanel(this.data);
 		readIconInBackground(new File(path));
 		this.threePhasePanel.setOpaque(false);
 		this.addMouseListener(threePhasePanel);

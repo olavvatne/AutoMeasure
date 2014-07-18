@@ -64,12 +64,12 @@ public class ThreePhasePanel extends JPanel implements MouseListener, MouseMotio
 	 * @param data - image model
 	 * @param imgWidth - CHECK IF NEEDED
 	 */
-	public ThreePhasePanel(ImageDataModel data, int imgWidth) {
+	public ThreePhasePanel(ImageDataModel data) {
 		
 		//To avoid markers getting placed whenever, the windowWidth is set to the screen width initially.
 		//setData will override the value anyways. TODO: See if a repaint before setting the windowWidth will work in setData
 		this.windowWidth = (int)Toolkit.getDefaultToolkit().getScreenSize().getWidth(); //TODO:REMOVE?
-		this.imageWidth = imgWidth; //TODO: use a setter instead.
+		
 		
 		setData(data);
 		
