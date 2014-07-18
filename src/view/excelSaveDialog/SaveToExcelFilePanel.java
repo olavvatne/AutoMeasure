@@ -8,13 +8,11 @@ import java.util.List;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import utilities.ExcelModel;
 import utilities.ExcelWriter;
 import filter.ExcelFilter;
-import filter.ImageFilter;
 
 public class SaveToExcelFilePanel extends JPanel implements ActionListener {
 	private JButton excelButton;

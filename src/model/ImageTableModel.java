@@ -13,6 +13,8 @@ import java.util.List;
 
 import javax.swing.table.AbstractTableModel;
 
+import org.joda.time.DateTime;
+
 import utilities.ExcelModel;
 import analyze.ImageMarkerPoint;
 import automeasurer.Measurer;
@@ -25,6 +27,7 @@ public class ImageTableModel extends AbstractTableModel implements PropertyChang
 	protected PropertyChangeSupport pcs;
 	
 	public static final int ERROR_COLUMN = 2;
+	public static final int DATE_COLUMN = 1;
 	
 	public ImageTableModel() {
 		super();
@@ -70,6 +73,9 @@ public class ImageTableModel extends AbstractTableModel implements PropertyChang
 	public Object getValueAt(int rowIndex, int columnIndex) {
 		if(columnIndex == ERROR_COLUMN) {
 			return this.errorColumn.get(rowIndex);
+		}
+		else if(columnIndex == DATE_COLUMN) {
+			return data.get(rowIndex).getDate().toString("dd.MM.yyyy hh:mm");
 		}
 		return data.get(rowIndex).get(columnIndex);
 	}
@@ -130,7 +136,7 @@ public class ImageTableModel extends AbstractTableModel implements PropertyChang
 			return Enum.class;
 		}
 		case 1: {
-			return Date.class;
+			return String.class;
 		}
 		default: {
 			return String.class;

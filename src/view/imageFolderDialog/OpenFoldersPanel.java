@@ -7,11 +7,9 @@ import java.beans.PropertyChangeSupport;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Date;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
-import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 
 
@@ -19,6 +17,8 @@ import javax.swing.JFileChooser;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+
+import org.joda.time.DateTime;
 
 import automeasurer.Measurer;
 
@@ -119,8 +119,7 @@ public class OpenFoldersPanel extends JPanel implements ActionListener {
 		}
 	}
 	
-	public static Date getDate(File file) {
-		int ZERO_SECONDS_INT = 0;
+	public static DateTime getDate(File file) {
 		Metadata metadata = null;
 		try {
 			metadata = ImageMetadataReader.readMetadata(file);
@@ -131,20 +130,25 @@ public class OpenFoldersPanel extends JPanel implements ActionListener {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		System.out.println("TETS");
 		//nullpointer exception må håndtere når filer ikke inneholder metadata!
 		if(metadata != null) {
 			ExifSubIFDDirectory directory = metadata.getDirectory(ExifSubIFDDirectory.class);
-			Date date = null;
+			DateTime date = null;
 			try {
-				date = directory.getDate(ExifSubIFDDirectory.TAG_DATETIME_ORIGINAL);
+				date = new DateTime(directory.getDate(ExifSubIFDDirectory.TAG_DATETIME_ORIGINAL));
 			} catch (Exception e) {
 				//TODO: BETTER ERROR HANDLING __INVALID IMAGES GETS HERE
-				date = new Date();
+				date = DateTime.now();
 			}
-			date.setSeconds(ZERO_SECONDS_INT);
+			System.out.println("");
+			date = date.minuteOfDay().roundFloorCopy();
+			System.out.println(date.toString());
 			return date;
 		}
-		else return null;
+		else {
+			return null;
+		}
 	}
 	
 	

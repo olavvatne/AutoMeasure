@@ -2,14 +2,13 @@ package utilities;
 
 import java.io.File;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
+
+import org.joda.time.DateTime;
 
 import jxl.Workbook;
 import jxl.read.biff.BiffException;
 import jxl.write.Label;
-import jxl.write.Number;
 import jxl.write.WritableSheet;
 import jxl.write.WritableWorkbook;
 import jxl.write.WriteException;
@@ -22,8 +21,6 @@ public class ExcelWriter {
 	public static int WO_COLUMN =3;
 	
 	private static int FIRST_EXCEL_SHEET = 0;
-	private static int EQUAL_VALUES = 0;
-	private static int FIRST_VALUE_LESS =-1;
 	
 	WritableSheet sheet = null;
 	WritableWorkbook workbook = null;
@@ -100,27 +97,26 @@ public class ExcelWriter {
 		int excelLength = sheet.getRows();
 		
 		for(ExcelModel measurement: data) {
-			Date measurementDate = measurement.getDate();
+			DateTime measurementDate = measurement.getDate();
 			int i;
 			boolean ImageDateBefore = false;
 			boolean noDateForImage = false;
 			
-			System.out.println(measurementDate.toLocaleString());
+			System.out.println(measurementDate.toString());
 			System.out.println("MEASUREMENTDATE");
 			for(i= excelIndex; i<excelLength; i++ ) {
-				Date excelDate = getDate(i);
-				int compareResult = DateUtil.compareDate(measurementDate, excelDate);
-				if(compareResult == EQUAL_VALUES) {
+				DateTime excelDate = getDate(i);
+				if(measurementDate.isEqual(excelDate)) {
 					System.out.println("EQUAL");
 					
 					//Method for date added, but also for values only, to avoid magic numbers
 					setValueCells(measurement.getRowAsStringRow(), i);
 					break;
 				}
-				else if(compareResult == FIRST_VALUE_LESS) {
+				else if(measurementDate.isBefore(excelDate)) {
 					System.out.println("Measure og så excel havnet i <");
-					System.out.println(excelDate.toLocaleString());
-					System.out.println(measurementDate.toLocaleString());
+					System.out.println(excelDate.toString());
+					System.out.println(measurementDate.toString());
 					//Think this is when measurementDate begins before excelDate. Important for when
 					//excelIndex == 0 and measurement is before exceldate
 					if(excelIndex == 0) {
@@ -141,8 +137,8 @@ public class ExcelWriter {
 					}
 					else {
 						System.out.println("I ELSEN");
-						System.out.println(excelDate.toLocaleString());
-						System.out.println(measurementDate.toLocaleString());
+						System.out.println(excelDate.toString());
+						System.out.println(measurementDate.toString());
 					}
 				}
 			}
@@ -159,13 +155,14 @@ public class ExcelWriter {
 		}
 	}
 	
-	private Date getDate(int row) {
+	private DateTime getDate(int row) {
 		String date = sheet.getWritableCell(dateColumn, row).getContents().trim();
 		String time = sheet.getWritableCell(timeColumn, row).getContents().trim();
 		String datetime = date + " " + time;
 		
 		try {
-			return new SimpleDateFormat(this.dateRegex).parse(datetime);
+			return new DateTime(datetime);
+			//return new SimpleDateFormat(this.dateRegex).parse(datetime);
 		} catch (Exception e) {
 			return null;
 		}
