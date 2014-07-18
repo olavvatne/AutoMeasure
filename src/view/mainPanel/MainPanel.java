@@ -54,7 +54,8 @@ public class MainPanel extends JPanel implements ActionListener, PropertyChangeL
 		JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,
                 imageTablePanel, infoPanel);
 		this.add(splitPane, BorderLayout.CENTER);
-		
+		//When frame is resized
+		splitPane.setResizeWeight(0.9d);
 		progress = new ProgressPanel();
 		this.add(progress, BorderLayout.SOUTH);
 		this.model.addPropertyChangeListener(this);

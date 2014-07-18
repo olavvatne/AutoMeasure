@@ -12,6 +12,8 @@ import java.awt.Toolkit;
 
 
 
+
+
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -19,6 +21,7 @@ import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
 import view.mainPanel.MainPanel;
+import view.mainPanel.menuBar.MenuBar;
 
 
 
@@ -66,6 +69,7 @@ public class Measurer {
 	public static void run() {
 		JFrame frame = new JFrame();
 		MainPanel panel = new MainPanel();
+		MenuBar menu = new MenuBar();
 		
 		Dimension sz = Toolkit.getDefaultToolkit().getScreenSize();
 		//frame.setMinimumSize(new Dimension((int)(sz.getWidth()/2), (int)(sz.getHeight()/2)));
@@ -77,6 +81,7 @@ public class Measurer {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		//frame.setExtendedState(JFrame.MAXIMIZED_BOTH); //flytter på seg bug
 		frame.add(panel);
+		frame.setJMenuBar(menu);
 		frame.pack();
 		frame.setVisible(true);
 		

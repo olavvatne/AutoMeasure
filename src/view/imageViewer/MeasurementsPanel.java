@@ -30,7 +30,7 @@ import model.ImageTableModel;
  * @author Olav
  *
  */
-public class MeasurementsPanel extends Viewer implements ActionListener, KeyListener {
+public class MeasurementsPanel extends Viewer implements ActionListener {
 	ImageTableModel model;
 	private PropertyChangeSupport pcs; 
 	int row;
