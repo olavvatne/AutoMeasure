@@ -190,6 +190,8 @@ public class ThreePhasePanel extends JPanel implements MouseListener, MouseMotio
     	g.setColor(status.color());
     	g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER,(float)0.3f));
     	g.fillRect(10, 10, 30, 30);
+    	g.setFont(new Font("Arial", Font.PLAIN, 12));
+    	g.drawString(status.text(), 10, 50);
 	}
 	/**
 	 * Called from paintComponent. A convenience method for painting a single line.
