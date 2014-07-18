@@ -45,7 +45,6 @@ public class MeasurementsPanel extends Viewer implements ActionListener, KeyList
         toolBar.setFloatable(false);
         toolBar.setRollover(true);
         add(toolBar, BorderLayout.PAGE_START);
-        this.addKeyListener(this);
         
         frame.addWindowListener(new WindowAdapter() {
         	@Override
@@ -105,30 +104,6 @@ public class MeasurementsPanel extends Viewer implements ActionListener, KeyList
 		this.pcs.addPropertyChangeListener(listener);
 	}
 	
-	@Override
-	public void keyPressed(KeyEvent e) {
-		if(e.getKeyCode() == KeyEvent.VK_LEFT) {
-			iterateModel(Measurer.NEXT);
-		}
-		else if(e.getKeyCode() == KeyEvent.VK_RIGHT) {
-			iterateModel(Measurer.PREVIOUS);
-		}
-		
-	}
-
-
-	@Override
-	public void keyReleased(KeyEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-
-
-	@Override
-	public void keyTyped(KeyEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
 
 	private void saveChanges() {
 		this.threePhasePanel.close();
