@@ -6,13 +6,18 @@ import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 
+import javax.management.RuntimeErrorException;
 import javax.swing.JButton;
 import javax.swing.JComponent;
+import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
+import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
@@ -26,16 +31,45 @@ public class settingsPanel extends JPanel {
 		initComponents(parentPanel);
 	}
 	
+	
+	
+	protected void setSize(Component p) {
+		  tabbedPane.setPreferredSize(this.getMinimumSize());
+	      p.setPreferredSize(this.getMinimumSize());
+	        
+	}
+	
+	private void close() {
+		JDialog topFrame = (JDialog) SwingUtilities.getWindowAncestor(this);
+		if(topFrame instanceof JDialog) {
+			topFrame.dispose();			
+		}
+		else {
+			throw new RuntimeException("SettingsPanel not put inside a JDialog");
+		}
+	}
+	
+	private void save() {
+		//TODO: save settings
+		close();
+	}
+	protected JComponent makeTextPanel(String text) {
+        JPanel panel = new JPanel();
+        panel.setSize(new Dimension(400,400));
+        panel.setMinimumSize(new Dimension(400,400));
+        JLabel filler = new JLabel(text);
+        panel.add(filler);
+        return panel;
+    }
+	
 	private void initComponents(JPanel parentPanel) {
 		tabbedPane = new JTabbedPane();
-		
 		//TODO:Better way to get height.
 		final Dimension originalTabsDim = new Dimension(400, 400);
 		tabbedPane.addChangeListener(new ChangeListener() {
 			//Is this necessary?
             @Override
             public void stateChanged(ChangeEvent e) {
-
                 Component p =   ((JTabbedPane) e.getSource()).getSelectedComponent();
                 Dimension panelDim = p.getPreferredSize();
 
@@ -45,10 +79,7 @@ public class settingsPanel extends JPanel {
                  */
                 Dimension nd = originalTabsDim;
                 tabbedPane.setPreferredSize(nd);
-
-                //p.get
             }
-
         });
 
 		
@@ -68,7 +99,22 @@ public class settingsPanel extends JPanel {
         tabbedPane.setMnemonicAt(1, KeyEvent.VK_2);
         
         JButton saveButton = new JButton("Save");
+        saveButton.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				save();
+			}
+		});
         JButton cancelButton = new JButton("Cancel");
+        cancelButton.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				close();
+			}
+		});
+        
         GridBagConstraints c = new GridBagConstraints();
         c.gridx = 0;
         c.gridy = 0;
@@ -82,19 +128,4 @@ public class settingsPanel extends JPanel {
         c.anchor = GridBagConstraints.LINE_START;
         this.add(cancelButton,c);
 	}
-	
-	protected void setSize(Component p) {
-		  tabbedPane.setPreferredSize(this.getMinimumSize());
-	      p.setPreferredSize(this.getMinimumSize());
-	        
-	}
-	protected JComponent makeTextPanel(String text) {
-        JPanel panel = new JPanel();
-        panel.setSize(new Dimension(400,400));
-        panel.setMinimumSize(new Dimension(400,400));
-        System.out.println(panel.getSize());
-        JLabel filler = new JLabel(text);
-        panel.add(filler);
-        return panel;
-    }
 }
