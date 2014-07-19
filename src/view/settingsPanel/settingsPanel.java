@@ -8,6 +8,7 @@ import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.event.KeyEvent;
 
+import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -27,10 +28,11 @@ public class settingsPanel extends JPanel {
 	
 	private void initComponents(JPanel parentPanel) {
 		tabbedPane = new JTabbedPane();
+		
+		//TODO:Better way to get height.
 		final Dimension originalTabsDim = new Dimension(400, 400);
-		System.out.println(originalTabsDim + "ORIGINAL");
 		tabbedPane.addChangeListener(new ChangeListener() {
-
+			//Is this necessary?
             @Override
             public void stateChanged(ChangeEvent e) {
 
@@ -52,22 +54,33 @@ public class settingsPanel extends JPanel {
 		
 		JComponent analyzer = makeTextPanel("ANALYZER OPTIONS");
         tabbedPane.addTab("Analyzer", null, analyzer,
-                "Does nothing");
+                "Analyzer options");
         tabbedPane.setMnemonicAt(0, KeyEvent.VK_1);
          
         JComponent writer = makeTextPanel("EXCEL PANEL");
         tabbedPane.addTab("Writer", null, writer,
-                "Does twice as much nothing");
+                "Writer options");
         tabbedPane.setMnemonicAt(1, KeyEvent.VK_2);
         
         JComponent gui = makeTextPanel("GUI PANEL");
-        tabbedPane.addTab("Gui", null, gui,
+        tabbedPane.addTab("Gui options", null, gui,
                 "Does twice as much nothing");
         tabbedPane.setMnemonicAt(1, KeyEvent.VK_2);
+        
+        JButton saveButton = new JButton("Save");
+        JButton cancelButton = new JButton("Cancel");
         GridBagConstraints c = new GridBagConstraints();
         c.gridx = 0;
         c.gridy = 0;
+        c.gridwidth = 2;
         this.add(tabbedPane, c);
+        c.gridwidth = 1;
+        c.gridy = 1;
+        c.anchor  = GridBagConstraints.LINE_END;
+        this.add(saveButton,c);
+        c.gridx = 1;
+        c.anchor = GridBagConstraints.LINE_START;
+        this.add(cancelButton,c);
 	}
 	
 	protected void setSize(Component p) {
