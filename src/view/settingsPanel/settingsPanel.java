@@ -22,7 +22,8 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 public class settingsPanel extends JPanel {
-	JTabbedPane tabbedPane;
+	private JTabbedPane tabbedPane;
+	
 	private static int maxW = 0;
     private static int maxH = 0;
     
@@ -83,17 +84,17 @@ public class settingsPanel extends JPanel {
         });
 
 		
-		JComponent analyzer = makeTextPanel("ANALYZER OPTIONS");
+		BaseSettings analyzer = new AnalyzerSettings();
         tabbedPane.addTab("Analyzer", null, analyzer,
                 "Analyzer options");
         tabbedPane.setMnemonicAt(0, KeyEvent.VK_1);
          
-        JComponent writer = makeTextPanel("EXCEL PANEL");
+        BaseSettings writer = new WriterSettings();
         tabbedPane.addTab("Writer", null, writer,
                 "Writer options");
         tabbedPane.setMnemonicAt(1, KeyEvent.VK_2);
         
-        JComponent gui = makeTextPanel("GUI PANEL");
+        BaseSettings gui = new GuiSettings();
         tabbedPane.addTab("Gui options", null, gui,
                 "Does twice as much nothing");
         tabbedPane.setMnemonicAt(1, KeyEvent.VK_2);
