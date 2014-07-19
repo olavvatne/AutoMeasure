@@ -51,7 +51,12 @@ public class settingsPanel extends JPanel {
 	}
 	
 	private void save() {
-		//TODO: save settings
+		Component[] panels = tabbedPane.getComponents();
+		for (int i = 0; i< panels.length; i++) {
+			if(panels[i] instanceof BaseSettings) {
+				((BaseSettings)panels[i]).save();
+			}
+		}
 		close();
 	}
 	protected JComponent makeTextPanel(String text) {

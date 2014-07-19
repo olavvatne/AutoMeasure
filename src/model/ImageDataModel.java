@@ -8,7 +8,9 @@ import org.joda.time.DateTime;
 import utilities.ExcelModel;
 import utilities.measurement.Measurement;
 import utilities.measurement.ValueMeasurement;
+import view.settingsPanel.Setting;
 import analyze.ImageMarkerPoint;
+import automeasurer.ConfigurationManager;
 
 /**
  * The data model for a measurement picture. 
@@ -187,8 +189,9 @@ public class ImageDataModel implements ExcelModel {
 	@Override
 	public String[] getRowAsStringRow() {
 		double[] values = this.getMeasurementValues();
-		return new String[]{this.date.toString("dd/MM/yy"),
-							this.date.toString("hh:mm:ss"),
+		//TODO: SHOULD BE UPDATED THROUGH A EVENT
+		return new String[]{this.date.toString(ConfigurationManager.getManager().get(Setting.DATE_REGEX)),
+							this.date.toString(ConfigurationManager.getManager().get(Setting.TIME_REGEX)),
 							values[0] +"",
 							values[1] + ""};
 	}

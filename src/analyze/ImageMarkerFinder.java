@@ -13,6 +13,8 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import view.settingsPanel.Setting;
+import automeasurer.ConfigurationManager;
 import ij.plugin.*;
 import ij.plugin.filter.ParticleAnalyzer;
 import ij.plugin.frame.*;
@@ -21,10 +23,15 @@ import ij.plugin.frame.*;
 
 public class ImageMarkerFinder {
 	
-	private static final int minHue = 65, minSat = 77, minBri = 21;
-	private static final int maxHue = 129, maxSat = 255, maxBri = 192;
 	
 	public static List<ImageMarkerPoint> run(String name) {
+		ConfigurationManager config = new ConfigurationManager();
+		final int minHue = config.getInt(Setting.MIN_HUE);
+		final int minSat = config.getInt(Setting.MIN_SAT);
+		final int minBri = config.getInt(Setting.MIN_BRI);
+		final int maxHue = config.getInt(Setting.MAX_HUE);
+		final int maxSat = config.getInt(Setting.MAX_SAT);
+		final int maxBri = config.getInt(Setting.MAX_BRI);
 		
 		ImagePlus imp = new Opener().openImage(name);
 		ImageStack stack = imp.getStack();
