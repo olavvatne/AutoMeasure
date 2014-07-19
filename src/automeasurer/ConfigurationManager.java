@@ -6,18 +6,7 @@ import view.settingsPanel.Setting;
 
 //TODO: DOCUMENTATION
 public class ConfigurationManager {
-	public static final String DATE_COLUMN = "datecolumn";
-	public static final String TIME_COLUMN = "time";
 	public static final String VALUES_THREEPHASE = "valThree";
-	public static final String DATE_REGEX = "dateRegex";
-	public static final String TIME_REGEX = "timeRegex";
-	public static final String MIN_HUE = "Min hue";
-	public static final String MIN_BRI = "Min bri";
-	public static final String MIN_SAT = "Min sat";
-	
-	public static final String MAX_HUE = "Max hue";
-	public static final String MAX_BRI = "Max bri";
-	public static final String MAX_SAT = "Max sat";
 	
 	public static ConfigurationManager getManager() {
 		return new ConfigurationManager();
