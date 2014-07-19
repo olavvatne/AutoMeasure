@@ -71,6 +71,8 @@ public class OpenFoldersPanel extends JPanel implements ActionListener {
 		this.add(scroll);
 		
 	}
+	
+	
 	private int getSizeOfFiles() {
 		int maxsize = 0;
 		for ( int t = 0; t<files.size(); t++) {

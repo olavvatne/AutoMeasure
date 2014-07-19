@@ -69,7 +69,7 @@ public class Measurer {
 	public static void run() {
 		JFrame frame = new JFrame();
 		MainPanel panel = new MainPanel();
-		MenuBar menu = new MenuBar();
+		MenuBar menu = new MenuBar(panel, frame);
 		
 		Dimension sz = Toolkit.getDefaultToolkit().getScreenSize();
 		//frame.setMinimumSize(new Dimension((int)(sz.getWidth()/2), (int)(sz.getHeight()/2)));
