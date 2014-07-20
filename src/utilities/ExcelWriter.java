@@ -6,6 +6,8 @@ import java.util.List;
 
 import org.joda.time.DateTime;
 
+import view.settingsPanel.Setting;
+import automeasurer.ConfigurationManager;
 import jxl.Workbook;
 import jxl.read.biff.BiffException;
 import jxl.write.Label;
@@ -24,10 +26,9 @@ public class ExcelWriter {
 	
 	WritableSheet sheet = null;
 	WritableWorkbook workbook = null;
-	private String dateRegex = "dd/MM/yy hh:mm:ss";
 	//settings maybe
-	private int dateColumn = DATE_COLUMN;
-	private int timeColumn = TIME_COLUMN;
+	private int dateColumn = ConfigurationManager.getManager().getInt(Setting.DATE_COLUMN);
+	private int timeColumn = ConfigurationManager.getManager().getInt(Setting.TIME_COLUMN);
 	//If file contains dates, matching between image and excel date can be performed
 	boolean fileContainDates = false;
 	
@@ -176,6 +177,7 @@ public class ExcelWriter {
 	private void writeToFileWithNoDates(List<ExcelModel> data) {
 		for(int row = 0; row<data.size(); row++) {
 			String[] values = data.get(row).getRowAsStringRow();
+			//TODO: CONFIG WHAT ROWS TO WRITE TO
 			for(int column = 0; column<values.length; column++) {
 				this.setCell(column, row,  values[column]);
 			}
