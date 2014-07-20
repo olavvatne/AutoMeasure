@@ -21,11 +21,22 @@ import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+/**
+ * The panel containg the JTabbedPane, with all section
+ * of settings.
+ * 
+ * - GUI settings
+ * - Analyzer settings
+ * - Writer settings
+ * 
+ * @author Olav
+ *
+ */
 public class settingsPanel extends JPanel {
 	private JTabbedPane tabbedPane;
 	
-	private static int maxW = 0;
-    private static int maxH = 0;
+	//private static int maxW = 0;
+    //private static int maxH = 0;
     
 	public settingsPanel(JPanel parentPanel) {
 		 super(new GridBagLayout());
@@ -40,6 +51,11 @@ public class settingsPanel extends JPanel {
 	        
 	}
 	
+	/**
+	 * When closing the settingspanel the jdialog is also closed.
+	 * Its important that the settings panel reside inside a JDialog.
+	 * If not a exception is thrown.
+	 */
 	private void close() {
 		JDialog topFrame = (JDialog) SwingUtilities.getWindowAncestor(this);
 		if(topFrame instanceof JDialog) {
@@ -50,6 +66,12 @@ public class settingsPanel extends JPanel {
 		}
 	}
 	
+	/**
+	 * The save method should be called if save button is pressed.
+	 * Will go through all sub panels containing settings, and save
+	 * them into the configuration manager.
+	 * 
+	 */
 	private void save() {
 		Component[] panels = tabbedPane.getComponents();
 		for (int i = 0; i< panels.length; i++) {
@@ -59,14 +81,7 @@ public class settingsPanel extends JPanel {
 		}
 		close();
 	}
-	protected JComponent makeTextPanel(String text) {
-        JPanel panel = new JPanel();
-        panel.setSize(new Dimension(400,400));
-        panel.setMinimumSize(new Dimension(400,400));
-        JLabel filler = new JLabel(text);
-        panel.add(filler);
-        return panel;
-    }
+	
 	
 	private void initComponents(JPanel parentPanel) {
 		tabbedPane = new JTabbedPane();

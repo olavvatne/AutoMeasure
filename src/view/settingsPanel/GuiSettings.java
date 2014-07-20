@@ -5,6 +5,14 @@ import javax.swing.JLabel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+/**
+ * Gui settings is a JPanel,exteded from BaseSettings
+ * It has access to the configuration manager through base settings,
+ * and implements changeListener.
+ * All options regarding the gui should be put here.
+ * @author Olav
+ *
+ */
 public class GuiSettings extends BaseSettings implements ChangeListener {
 	JCheckBox showDates;
 	JCheckBox showStatus;
@@ -14,7 +22,11 @@ public class GuiSettings extends BaseSettings implements ChangeListener {
 		initComponents();
 	}
 	
-	
+	/**
+	 * Initialize gui components and put the into the jpanel.
+	 *
+	 * -checkbox for showing date and status in threephasepanel
+	 */
 	private void initComponents() {
 		JLabel label = new JLabel("Show dates in panel");
 		this.add(label);
@@ -31,7 +43,11 @@ public class GuiSettings extends BaseSettings implements ChangeListener {
 		this.add(showStatus);
 	}
 
-
+	/**
+	 * Abstract method of Basesettings that has to be implemented.
+	 * The panel decide itself how it wants to save its options.
+	 * 
+	 */
 	@Override
 	protected void saveChanges() {
 		config.put(Setting.SHOW_DATES, showDates.isSelected());

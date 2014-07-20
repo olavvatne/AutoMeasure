@@ -7,6 +7,17 @@ import javax.swing.JTextField;
 import automeasurer.ConfigurationManager;
 import utilities.ExcelWriter;
 
+/**
+ * A jpanel containing gui controls for chaning settings regarding
+ * the excel writer. 
+ * 
+ * -Where to read date from
+ * -Where to read time from
+ * -What date regex to use when writing to file
+ * -What time regex to use when wrinting to file
+ * @author Olav
+ *
+ */
 public class WriterSettings extends BaseSettings {
 	private JSpinner dateCol;
 	private JSpinner timeCol;
@@ -18,7 +29,9 @@ public class WriterSettings extends BaseSettings {
 		initComponents();
 	}
 	
-	
+	/**
+	 * Initialize components and put them into the jpanel.
+	 */
 	private void initComponents() {
 		JLabel label = new JLabel("Date column");
 		this.add(label);
@@ -43,7 +56,12 @@ public class WriterSettings extends BaseSettings {
 		this.add(timeRegex);
 	}
 
-
+	
+	/**
+	 * This class extends BaseSettings and should implement the abstract
+	 * saveChanges(). In this case it takes all the controls model values,
+	 * and save them into the configuration manager.
+	 */
 	@Override
 	protected void saveChanges() {
 		System.out.println((Integer)dateCol.getValue());
