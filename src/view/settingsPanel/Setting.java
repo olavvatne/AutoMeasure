@@ -19,7 +19,9 @@ public enum Setting {
 	TIME_COLUMN (new Integer(1), "Maximum hue"),
 	
 	DATE_REGEX ("dd/MM/yy", "Date regex"),
-	TIME_REGEX ("hh:mm:ss", "Time regex");
+	TIME_REGEX ("hh:mm:ss", "Time regex"),
+	
+	SHOW_DATES (new Boolean(false), "Show dates");
 	
 	private final Object defaultValue;   // Color associated with status
     private final String plainText; // The Status in plainText
@@ -40,6 +42,11 @@ public enum Setting {
     public double defaultDouble() {
     	//TODO:ERRRORHANDLING
     	return (double)defaultValue;
+    }
+    
+    public boolean defaultBoolean() {
+    	//TODO:ERRRORHANDLING
+    	return (boolean)defaultValue;
     }
     
     public String text() { return plainText; }

@@ -16,7 +16,9 @@ import java.util.List;
 
 import javax.swing.JPanel;
 
+import automeasurer.ConfigurationManager;
 import utilities.measurement.Measurement;
+import view.settingsPanel.Setting;
 import model.ImageDataModel;
 import model.MarkerValue;
 import model.Offset;
@@ -55,7 +57,7 @@ public class ThreePhasePanel extends JPanel implements MouseListener, MouseMotio
 	private boolean[] isValueLineSelected = new boolean[2];
 	private int selected = NO_SELECTION;
 	private Measurement calc;
-	
+	private boolean showDates;
 	private boolean isOffsetDirty = false;
 	
 	/**
@@ -69,8 +71,8 @@ public class ThreePhasePanel extends JPanel implements MouseListener, MouseMotio
 		//To avoid markers getting placed whenever, the windowWidth is set to the screen width initially.
 		//setData will override the value anyways. TODO: See if a repaint before setting the windowWidth will work in setData
 		this.windowWidth = (int)Toolkit.getDefaultToolkit().getScreenSize().getWidth(); //TODO:REMOVE?
-		
-		
+		showDates = ConfigurationManager.getManager()
+										.getBoolean(Setting.SHOW_DATES);
 		setData(data);
 		
 	}
@@ -183,8 +185,17 @@ public class ThreePhasePanel extends JPanel implements MouseListener, MouseMotio
     	paintLine(g, "O/G", Measurement.OG_VALUE, calc.getThreePhaseValue(Measurement.OG_VALUE), LIGHT_RED);
     	
     	paintStatusRectangle(g);
+    	paintImageDate(g);
+    	
 	}
 	
+	private void paintImageDate(Graphics2D g) {
+		if(showDates) {
+			g.setFont(new Font("Arial", Font.BOLD, 15));
+			g.setColor(Color.white);
+    		g.drawString(model.getDate().toString("dd/MM/yy hh:mm:ss"), 100, 20);
+    	}
+	}
 	private void paintStatusRectangle(Graphics2D g) {
 		Status status = this.model.getStatus();    	
     	g.setColor(status.color());

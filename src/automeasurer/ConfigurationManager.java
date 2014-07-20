@@ -12,8 +12,11 @@ public class ConfigurationManager {
 		return new ConfigurationManager();
 	}
 	
-	private Preferences config = Preferences.userRoot().userNodeForPackage(ConfigurationManager.class);;
+	private Preferences config;
 	
+	public ConfigurationManager() {
+		config = Preferences.userRoot().userNodeForPackage(ConfigurationManager.class);
+	}
 	public void put(Setting key, double value) {
 		config.putDouble(key.name(), value);
 	}
@@ -26,8 +29,16 @@ public class ConfigurationManager {
 		config.put(key.name(), value);
 	}
 	
+	public void put(Setting key, boolean value) {
+		config.putBoolean(key.name(), value);
+	}
+	
 	public double getDouble(Setting key) {
 		return config.getDouble(key.name(), key.defaultDouble());
+	}
+	
+	public boolean getBoolean(Setting key) {
+		return config.getBoolean(key.name(), key.defaultBoolean());
 	}
 	
 	public int getInt(Setting key) {
