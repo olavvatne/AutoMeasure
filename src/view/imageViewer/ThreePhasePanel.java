@@ -58,6 +58,7 @@ public class ThreePhasePanel extends JPanel implements MouseListener, MouseMotio
 	private int selected = NO_SELECTION;
 	private Measurement calc;
 	private boolean showDates;
+	private boolean showStatus;
 	private boolean isOffsetDirty = false;
 	
 	/**
@@ -73,6 +74,8 @@ public class ThreePhasePanel extends JPanel implements MouseListener, MouseMotio
 		this.windowWidth = (int)Toolkit.getDefaultToolkit().getScreenSize().getWidth(); //TODO:REMOVE?
 		showDates = ConfigurationManager.getManager()
 										.getBoolean(Setting.SHOW_DATES);
+		showStatus = ConfigurationManager.getManager()
+				.getBoolean(Setting.SHOW_STATUS);
 		setData(data);
 		
 	}
@@ -189,6 +192,12 @@ public class ThreePhasePanel extends JPanel implements MouseListener, MouseMotio
     	
 	}
 	
+	/**
+	 * Paints the date of the image if this is set to true
+	 * in the settings. Will write a white formatted date
+	 * in the left corner.
+	 * @param g
+	 */
 	private void paintImageDate(Graphics2D g) {
 		if(showDates) {
 			g.setFont(new Font("Arial", Font.BOLD, 15));
@@ -196,13 +205,16 @@ public class ThreePhasePanel extends JPanel implements MouseListener, MouseMotio
     		g.drawString(model.getDate().toString("dd/MM/yy hh:mm:ss"), 100, 20);
     	}
 	}
+	
 	private void paintStatusRectangle(Graphics2D g) {
+		if(showStatus) {
 		Status status = this.model.getStatus();    	
     	g.setColor(status.color());
     	g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER,(float)0.3f));
     	g.fillRect(10, 10, 30, 30);
     	g.setFont(new Font("Arial", Font.PLAIN, 12));
     	g.drawString(status.text(), 10, 50);
+		}
 	}
 	/**
 	 * Called from paintComponent. A convenience method for painting a single line.

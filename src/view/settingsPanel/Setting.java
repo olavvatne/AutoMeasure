@@ -21,7 +21,8 @@ public enum Setting {
 	DATE_REGEX ("dd/MM/yy", "Date regex"),
 	TIME_REGEX ("hh:mm:ss", "Time regex"),
 	
-	SHOW_DATES (new Boolean(false), "Show dates");
+	SHOW_DATES (new Boolean(true), "Show dates"),
+	SHOW_STATUS (new Boolean(true), "Show status");
 	
 	private final Object defaultValue;   // Color associated with status
     private final String plainText; // The Status in plainText

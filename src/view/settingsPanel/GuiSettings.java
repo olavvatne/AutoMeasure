@@ -7,6 +7,8 @@ import javax.swing.event.ChangeListener;
 
 public class GuiSettings extends BaseSettings implements ChangeListener {
 	JCheckBox showDates;
+	JCheckBox showStatus;
+	
 	public GuiSettings() {
 		super();
 		initComponents();
@@ -20,13 +22,20 @@ public class GuiSettings extends BaseSettings implements ChangeListener {
 		showDates.addChangeListener(this);
 		showDates.setSelected(config.getBoolean(Setting.SHOW_DATES));
 		this.add(showDates);
+		
+		label = new JLabel("Show status in panel");
+		this.add(label);
+		showStatus = new JCheckBox();
+		showStatus.addChangeListener(this);
+		showStatus.setSelected(config.getBoolean(Setting.SHOW_STATUS));
+		this.add(showStatus);
 	}
 
 
 	@Override
 	protected void saveChanges() {
 		config.put(Setting.SHOW_DATES, showDates.isSelected());
-		
+		config.put(Setting.SHOW_STATUS, showStatus.isSelected());
 	}
 
 
