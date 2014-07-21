@@ -4,6 +4,11 @@ import java.awt.Color;
 
 /**
  * Enum for retrieving data from the configuration manager. 
+ * Each enum has a default data attached to it, of the type
+ * object. It is the callers responsibiliy to know what type
+ * it should be, int boolean or String.
+ * In addition to the default value, a text string is assosiated
+ * with a enum. Could be used in a JLabel etc.
  * @author Olav
  *
  */

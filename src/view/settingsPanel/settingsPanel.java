@@ -82,7 +82,11 @@ public class settingsPanel extends JPanel {
 		close();
 	}
 	
-	
+	/**
+	 * InitComponents construct the panel, adding all sub settings panels
+	 * into the JTabbedPane etc.
+	 * @param parentPanel
+	 */
 	private void initComponents(JPanel parentPanel) {
 		tabbedPane = new JTabbedPane();
 		//TODO:Better way to get height.

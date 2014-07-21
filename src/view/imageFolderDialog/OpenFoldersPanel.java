@@ -99,7 +99,12 @@ public class OpenFoldersPanel extends JPanel implements ActionListener {
 					int size = 0;
 					for ( int j = 0; j<files.size(); j++) {
 						for (int i = 0 ; i<files.get(j).length; i++) {
-							list.add(new ImageDataModel(getDate(files.get(j)[i]), files.get(j)[i].getAbsolutePath()));
+							DateTime date = getDate(files.get(j)[i]);
+							if(date != null) {
+								//TODO: Somehow tell the user how many invalid images was found.
+								list.add(new ImageDataModel(date, files.get(j)[i].getAbsolutePath()));
+							}
+						
 							if(i % 30 == 0) {
 								pcs.firePropertyChange(Measurer.PROGRESS_UPDATE, null, new Integer(size+i));
 							}
@@ -126,11 +131,11 @@ public class OpenFoldersPanel extends JPanel implements ActionListener {
 		try {
 			metadata = ImageMetadataReader.readMetadata(file);
 		} catch (ImageProcessingException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
+			return null;
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
+			return null;
 		}
 		System.out.println("TETS");
 		//nullpointer exception må håndtere når filer ikke inneholder metadata!
@@ -141,16 +146,13 @@ public class OpenFoldersPanel extends JPanel implements ActionListener {
 				date = new DateTime(directory.getDate(ExifSubIFDDirectory.TAG_DATETIME_ORIGINAL));
 			} catch (Exception e) {
 				//TODO: BETTER ERROR HANDLING __INVALID IMAGES GETS HERE
-				date = DateTime.now();
+				return null;
 			}
-			System.out.println("");
 			date = date.minuteOfDay().roundFloorCopy();
 			System.out.println(date.toString());
 			return date;
 		}
-		else {
-			return null;
-		}
+		return null;
 	}
 	
 	

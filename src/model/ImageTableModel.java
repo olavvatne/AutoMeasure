@@ -117,8 +117,9 @@ public class ImageTableModel extends AbstractTableModel implements PropertyChang
 			//something something
 		}
 		else if ( e.getPropertyName().equals(Measurer.FINISHED)) {
-		
-			setData((ArrayList<ImageDataModel>)e.getNewValue());
+			if(e.getNewValue() != null) {
+				setData((ArrayList<ImageDataModel>)e.getNewValue());				
+			}
 		}
 
 	}

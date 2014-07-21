@@ -1,13 +1,18 @@
 package utilities;
 
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
 import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 
 import view.settingsPanel.Setting;
 import automeasurer.ConfigurationManager;
+import automeasurer.Measurer;
 import jxl.Workbook;
 import jxl.read.biff.BiffException;
 import jxl.write.Label;
@@ -29,8 +34,12 @@ public class ExcelWriter {
 	//settings maybe
 	private int dateColumn = ConfigurationManager.getManager().getInt(Setting.DATE_COLUMN);
 	private int timeColumn = ConfigurationManager.getManager().getInt(Setting.TIME_COLUMN);
+	private String dateRegex = ConfigurationManager.getManager().get(Setting.DATE_REGEX);
+	private String timeRegex = ConfigurationManager.getManager().get(Setting.TIME_REGEX);
+	private DateTimeFormatter formatter = DateTimeFormat.forPattern(dateRegex + " " + timeRegex);
 	//If file contains dates, matching between image and excel date can be performed
 	boolean fileContainDates = false;
+	private PropertyChangeSupport pcs;
 	
 	/**
 	 * A new file has to be created, and inserted when initializing an ExcelWriter.
@@ -40,10 +49,12 @@ public class ExcelWriter {
 	 * @param excelFileWithDates 
 	 */
 	public ExcelWriter(File file, boolean newFile) {
+		pcs = new PropertyChangeSupport(this);
 		if(newFile) {
 			try {
 				workbook =Workbook.createWorkbook(file);
 				sheet = workbook.createSheet("data", FIRST_EXCEL_SHEET);
+				
 				//sheet = workbook.getSheet(FIRST_EXCEL_SHEET);
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
@@ -105,7 +116,13 @@ public class ExcelWriter {
 			
 			System.out.println(measurementDate.toString());
 			System.out.println("MEASUREMENTDATE");
+			pcs.firePropertyChange(Measurer.SETMAX, null, new Integer(excelLength));
 			for(i= excelIndex; i<excelLength; i++ ) {
+				
+				if(i % 50 == 0) {
+					pcs.firePropertyChange(Measurer.PROGRESS_UPDATE, null, new Integer(i));
+				}
+				
 				DateTime excelDate = getDate(i);
 				if(measurementDate.isEqual(excelDate)) {
 					System.out.println("EQUAL");
@@ -116,7 +133,7 @@ public class ExcelWriter {
 				}
 				else if(measurementDate.isBefore(excelDate)) {
 					System.out.println("Measure og så excel havnet i <");
-					System.out.println(excelDate.toString());
+					System.out.println(excelDate);
 					System.out.println(measurementDate.toString());
 					//Think this is when measurementDate begins before excelDate. Important for when
 					//excelIndex == 0 and measurement is before exceldate
@@ -148,6 +165,8 @@ public class ExcelWriter {
 			}
 			excelIndex = i;
 		}
+		
+		pcs.firePropertyChange(Measurer.FINISHED, null, null);
 	}
 	
 	private void setValueCells(String[] values, int row) {
@@ -162,9 +181,12 @@ public class ExcelWriter {
 		String datetime = date + " " + time;
 		
 		try {
-			return new DateTime(datetime);
+			
+			return formatter.parseDateTime(datetime);
 			//return new SimpleDateFormat(this.dateRegex).parse(datetime);
 		} catch (Exception e) {
+			//TODO: Notify the user at least the first time, and suggest course of action.
+			e.printStackTrace();
 			return null;
 		}
 	}
@@ -175,13 +197,20 @@ public class ExcelWriter {
 	 * @param data List of objects implementing ExcelModel interface
 	 */
 	private void writeToFileWithNoDates(List<ExcelModel> data) {
+		pcs.firePropertyChange(Measurer.SETMAX, null, new Integer(data.size()));
 		for(int row = 0; row<data.size(); row++) {
 			String[] values = data.get(row).getRowAsStringRow();
 			//TODO: CONFIG WHAT ROWS TO WRITE TO
 			for(int column = 0; column<values.length; column++) {
 				this.setCell(column, row,  values[column]);
 			}
+			
+			if(row % 30 == 0) {
+				pcs.firePropertyChange(Measurer.PROGRESS_UPDATE, null, new Integer(row));
+			}
 		}
+		
+		pcs.firePropertyChange(Measurer.FINISHED, null, null);
 	}
 	/**
 	 * Method should be called after finishing writing to the excel sheet.
@@ -241,5 +270,9 @@ public class ExcelWriter {
 		} while(copyFile.exists());
 
 		return copyFile;
+	}
+	
+	public void addPropertyChangeListener(PropertyChangeListener listener) {
+		pcs.addPropertyChangeListener(listener);
 	}
 }

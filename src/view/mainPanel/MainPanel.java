@@ -94,8 +94,14 @@ public class MainPanel extends JPanel implements ActionListener, PropertyChangeL
         else if (Measurer.SAVE.equals(cmd)) 
         { 
         	SaveToExcelFilePanel dialog = new SaveToExcelFilePanel(model.getDataModel());
+        	dialog.setPropertyChangeListener(progress);
         	int option = JOptionPane.showConfirmDialog(this ,dialog, "Excel dialog", JOptionPane.OK_CANCEL_OPTION);
-            
+            if(option == JOptionPane.OK_OPTION) {
+            	dialog.writeFile();
+            }
+            else {
+            	dialog.destroyFile();
+            }
         }
         else if (Measurer.ANALYZE.equals(cmd))
         {
