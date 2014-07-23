@@ -18,7 +18,6 @@ import analyze.Analyzer;
 import analyze.AnalyzerThreadsMonitor;
 import analyze.ImageMarkerFinder;
 import analyze.ImageMarkerPoint;
-import analyze.ImageValueFinder;
 import automeasurer.Measurer;
 import model.ImageDataModel;
 import model.Status;

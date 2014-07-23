@@ -4,6 +4,8 @@ package analyze;
 import java.util.ArrayList;
 import java.util.List;
 
+import analyze.value.AbstractValueFinder;
+import analyze.value.StrictValueFinder;
 import model.ImageDataModel;
 import model.Status;
 
@@ -14,11 +16,14 @@ public class Analyzer extends Thread {
 	private AnalyzerThreadsMonitor mon;
 	private FaultDetector fd;
 	private boolean running = false;
+	private AbstractValueFinder finder;
 	
 	public Analyzer(int id, AnalyzerThreadsMonitor monitor) {
 		this.idNumber = id;
 		this.mon = monitor;
 		this.fd = new FaultDetector();
+		//TODO: read from settings what value finder to use.
+		this.finder = new StrictValueFinder();
 	}
 	
 	public void run() {
@@ -40,7 +45,7 @@ public class Analyzer extends Thread {
 			List<ImageMarkerPoint> markers =ImageMarkerFinder.run(image.getFilePath());
 			List<Double> values = null;
 			if(fd.isMarkersCorrect(markers)) {
-				values =ImageValueFinder.getValues(image.getFilePath(), markers);
+				values = finder.getValues(image.getFilePath(), markers);
 				if(fd.isValuesCorrect(values)) {
 					valid = true;
 				}	
