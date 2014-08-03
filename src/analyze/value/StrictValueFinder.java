@@ -35,8 +35,8 @@ public class StrictValueFinder extends AbstractValueFinder {
 		imp2 = this.crop(imp2, m.get(OW_LOW), m.get(OW_HIGH));
 		
 		List<Double> values = new ArrayList<Double>();
-		double value1 = findValue(imp, true, 120, m.get(OG_HIGH).getX());
-		double value2 = findValue(imp2, false, 120,  m.get(OW_LOW).getX());
+		double value1 = findValue(imp, true, 150, m.get(OG_HIGH).getX());
+		double value2 = findValue(imp2, false, 150,  m.get(OW_LOW).getX());
 			values.add(value1);
 			values.add(value2);			
 		return values;
@@ -46,6 +46,7 @@ public class StrictValueFinder extends AbstractValueFinder {
 		IJ.run(imp, "8-bit", "");
 		IJ.run(imp, "Smooth", "");
 		IJ.run(imp, "Smooth", "");
+		IJ.setMinAndMax(imp, 126, 128);
 		IJ.setAutoThreshold(imp,"Default"); 
 		IJ.run(imp, "Convert to Mask", ""); 
 		int[] samples = null;	
@@ -60,12 +61,14 @@ public class StrictValueFinder extends AbstractValueFinder {
 			}
 		}
 		if(firstOverNegative == -1) {
+			errorMsg += "No valid samples. ";
 			return -1;
 		}
-		
-		int samplePrune = 0;
+		int validSamples = samples.length-1 - firstOverNegative;
+		int samplePrune = (int)Math.floor(validSamples*0.25);
 		if((samples.length-1 -samplePrune) -(firstOverNegative + samplePrune) <= 0) {
 			//to few valid samples;
+			this.errorMsg += "To few valid samples. ";
 			return -1;
 		}
 		System.out.println("SAMPLES LEFT: " + ((samples.length-1 -samplePrune) - (firstOverNegative + samplePrune)));
@@ -144,7 +147,7 @@ public class StrictValueFinder extends AbstractValueFinder {
 			}
 		}
 		
-		if(counter <= 2 && sampleTaken) {
+		if(sampleTaken) {
 			return value;
 		}
 		else {
@@ -177,7 +180,7 @@ public class StrictValueFinder extends AbstractValueFinder {
 			}
 		}
 		
-		if(counter <= 2 && sampleTaken) {
+		if(sampleTaken) {
 			return value;
 		}
 		else {

@@ -66,7 +66,7 @@ public class Analyzer extends Thread {
 			}
 			else {
 				//image.setStatus(Status.FAILURE);
-				mon.setStatus(Status.FAILURE, fd.getErrorMessage(), elementToAnalyze); 
+				mon.setStatus(Status.FAILURE, fd.getErrorMessage() + " " + finder.getErrorMessage() , elementToAnalyze); 
 			}
 			
 			

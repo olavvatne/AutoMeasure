@@ -27,6 +27,9 @@ public abstract class AbstractValueFinder {
 		}
 	}
 	
+	public String getErrorMessage() {
+		return errorMsg;
+	}
 	protected abstract boolean isFinderSuccessful();
 	/**
 	 * Crop will crop a image after p1 and p2. The height of the image is decided by an width height ratio that probably wont change often.
