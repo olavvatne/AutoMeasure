@@ -155,6 +155,7 @@ public class ImageTableModel extends AbstractTableModel implements PropertyChang
 		
 	}
 	
+	
 	/**
 	 * TODO: Check if there are better ways to do this, even though we know that list will not contain any other objects than objecs with ExcelModel interface.
 	 * @return List of excelModel compatible objects.

@@ -14,6 +14,7 @@ import java.util.List;
 
 import javax.swing.Box;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JToolBar;
 import javax.swing.SwingUtilities;
@@ -23,6 +24,7 @@ import analyze.ImageMarkerPoint;
 import automeasurer.Measurer;
 import model.ImageDataModel;
 import model.ImageTableModel;
+import model.Status;
 
 /**
  * Panel to view the image and its measurements, and update them if necessary.
@@ -33,6 +35,7 @@ import model.ImageTableModel;
 public class MeasurementsPanel extends Viewer implements ActionListener {
 	ImageTableModel model;
 	private PropertyChangeSupport pcs; 
+	JCheckBox iterateSuccessful;
 	int row;
 	
 	//finn bedre måte med refactorering
@@ -42,6 +45,7 @@ public class MeasurementsPanel extends Viewer implements ActionListener {
 		this.row = row;
 		JToolBar toolBar = new JToolBar();
         addButtons(toolBar);
+        
         toolBar.setFloatable(false);
         toolBar.setRollover(true);
         add(toolBar, BorderLayout.PAGE_START);
@@ -57,8 +61,12 @@ public class MeasurementsPanel extends Viewer implements ActionListener {
 	
 	
 	private void addButtons(JToolBar toolBar) {
-		JButton button = null;
 		toolBar.add( Box.createHorizontalGlue() );
+		this.iterateSuccessful = new JCheckBox("Iterate only successful images");
+		this.iterateSuccessful.setSelected(false);
+        toolBar.add(this.iterateSuccessful);
+        
+		JButton button = null;
 		button = new JButton("Previous");
         button.setActionCommand(Measurer.PREVIOUS);
         button.setToolTipText("Previous image in table");
@@ -71,7 +79,7 @@ public class MeasurementsPanel extends Viewer implements ActionListener {
         button.addActionListener(this);
         toolBar.add(button);
         
-		
+        
 	}
 	
 	@Override
@@ -85,20 +93,72 @@ public class MeasurementsPanel extends Viewer implements ActionListener {
 		if (Measurer.NEXT.equals(cmd)) {
 			if(this.model.getRowCount() > row+1) {
 				saveChanges();
-				row ++;	
-				this.setModel(this.model.getDataModel(row));
+				this.setModel(getNextDataModel(row, this.iterateSuccessful.isSelected()));
 				pcs.firePropertyChange(Measurer.TABLE_SELECTION, this.row-1, this.row);
 			}
 		}
 		else if (Measurer.PREVIOUS.equals(cmd) ) {
 			if(row-1 >= 0) {
 				saveChanges();
-				row --;
-				this.setModel(this.model.getDataModel(row));
+				this.setModel(getPreviousDataModel(row, this.iterateSuccessful.isSelected()));
 				pcs.firePropertyChange(Measurer.TABLE_SELECTION, this.row+1, this.row);
 			}
 		}
 	}
+	
+	/**
+	 * A helper method that depending on the boolean returns the appropriate next dataModel. If
+	 * onlySuccessful is checked the next successfully read imageDataModel is returned, else the next image in the
+	 * arrayList is returned
+	 * @param i
+	 * @param onlySuccessful
+	 * @return
+	 */
+	public ImageDataModel getNextDataModel(int i, boolean onlySuccessful) {
+		if(onlySuccessful) {
+			for(int j = i+1; j<this.model.getRowCount(); j++) {
+				//TODO: Inefficent if very many failed images inbetween
+				if(this.model.getDataModel(j).getStatus() == Status.SUCCESS) {
+					this.row = j;
+					return this.model.getDataModel(j);
+				}
+			}
+			//If no next success is found, same image is returned.
+			return this.model.getDataModel(i);
+		}
+		else {
+			//If the onlySuccessful is false, the next imageDataModel is returned.
+			this.row = i+1;
+			return this.model.getDataModel(this.row);			
+		}
+	}
+	
+	/**
+	 * A helper method that depending on the boolean returns the appropriate prevous dataModel. If
+	 * onlySuccessful is checked the previous successfully read imageDataModel is returned, else the next image in the
+	 * arrayList is returned
+	 * @param i
+	 * @param onlySuccessful
+	 * @return
+	 */
+	public ImageDataModel getPreviousDataModel(int i, boolean onlySuccessful) {
+		if(onlySuccessful) {
+			//TODO: Inefficent if very many failed images inbetween
+			for(int j = i-1; j>=0; j--) {
+				if(this.model.getDataModel(j).getStatus() == Status.SUCCESS) {
+					this.row = j;
+					return this.model.getDataModel(j);
+				}
+			}
+			return this.model.getDataModel(i);
+		}
+		else {
+			//If the onlySuccessful is false, the previous imageDataModel is returned.
+			this.row = i-1;
+			return this.model.getDataModel(this.row);			
+		}
+	}
+	
 	
 	public void addChangeListener(PropertyChangeListener listener) {
 		this.pcs.addPropertyChangeListener(listener);
