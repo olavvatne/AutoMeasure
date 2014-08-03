@@ -137,7 +137,7 @@ public class OpenFoldersPanel extends JPanel implements ActionListener {
 			e.printStackTrace();
 			return null;
 		}
-		System.out.println("TETS");
+
 		//nullpointer exception må håndtere når filer ikke inneholder metadata!
 		if(metadata != null) {
 			ExifSubIFDDirectory directory = metadata.getDirectory(ExifSubIFDDirectory.class);
@@ -149,7 +149,6 @@ public class OpenFoldersPanel extends JPanel implements ActionListener {
 				return null;
 			}
 			date = date.minuteOfDay().roundFloorCopy();
-			System.out.println(date.toString());
 			return date;
 		}
 		return null;
