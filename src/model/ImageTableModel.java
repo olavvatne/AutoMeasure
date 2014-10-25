@@ -75,7 +75,7 @@ public class ImageTableModel extends AbstractTableModel implements PropertyChang
 			return this.errorColumn.get(rowIndex);
 		}
 		else if(columnIndex == DATE_COLUMN) {
-			return data.get(rowIndex).getDate().toString("dd.MM.yyyy hh:mm");
+			return data.get(rowIndex).getDate().toString("dd.MM.yyyy HH:mm");
 		}
 		return data.get(rowIndex).get(columnIndex);
 	}

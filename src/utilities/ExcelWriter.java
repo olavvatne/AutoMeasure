@@ -114,8 +114,8 @@ public class ExcelWriter {
 			boolean ImageDateBefore = false;
 			boolean noDateForImage = false;
 			
-			System.out.println(measurementDate.toString());
-			System.out.println("MEASUREMENTDATE");
+			System.out.println("-----------------------");
+			System.out.println("MEASUREMENTDATE" + measurementDate.toString());
 			pcs.firePropertyChange(Measurer.SETMAX, null, new Integer(excelLength));
 			for(i= excelIndex; i<excelLength; i++ ) {
 				
@@ -132,11 +132,12 @@ public class ExcelWriter {
 					break;
 				}
 				else if(measurementDate.isBefore(excelDate)) {
-					System.out.println("Measure og så excel havnet i <");
-					System.out.println(excelDate);
-					System.out.println(measurementDate.toString());
+					System.out.println("measurement BEFORE exceldate");
+					System.out.println(excelDate.toString(dateRegex + " " + timeRegex));
+					System.out.println(measurementDate.toString(dateRegex + " " + timeRegex));
 					//Think this is when measurementDate begins before excelDate. Important for when
 					//excelIndex == 0 and measurement is before exceldate
+					
 					if(excelIndex == 0) {
 						//the exceldate can be close, but better to skip it!
 						noDateForImage = true;
@@ -145,7 +146,7 @@ public class ExcelWriter {
 					ImageDateBefore = true;
 				}
 				else {
-					//System.out.println("measurement date bigger than excelDate");
+					System.out.println("measurement AFTER exceldate");
 					if(ImageDateBefore) {
 						//Image date is inbetween two excel dates
 						//TODO: (Set to the value after always.) is TEMP
@@ -160,10 +161,9 @@ public class ExcelWriter {
 					}
 				}
 			}
-			if(noDateForImage) {
-				break;
+			if(!noDateForImage) {
+				excelIndex = i;				
 			}
-			excelIndex = i;
 		}
 		
 		pcs.firePropertyChange(Measurer.FINISHED, null, null);
@@ -181,8 +181,8 @@ public class ExcelWriter {
 		String datetime = date + " " + time;
 		
 		try {
-			
-			return formatter.parseDateTime(datetime);
+			DateTime result = formatter.parseDateTime(datetime);
+			return result.minuteOfDay().roundFloorCopy();
 			//return new SimpleDateFormat(this.dateRegex).parse(datetime);
 		} catch (Exception e) {
 			//TODO: Notify the user at least the first time, and suggest course of action.

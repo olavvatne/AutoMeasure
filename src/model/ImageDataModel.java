@@ -189,7 +189,12 @@ public class ImageDataModel implements ExcelModel {
 	@Override
 	public String[] getRowAsStringRow() {
 		double[] values = this.getMeasurementValues();
-		//TODO: SHOULD BE UPDATED THROUGH A EVENT
+		//TODO: Should use a hashmap for sending this kind of data.
+		//This will result in some context for the data, when each value has a key.
+		//TODO: Either change invalid values to the most negative number, or use null values instead. -1 can happen for a valid reading.
+		if(values[0] == -1.0 || values[1] == -1.0) {
+			return new String[]{};
+		}
 		return new String[]{this.date.toString(ConfigurationManager.getManager().get(Setting.DATE_REGEX)),
 							this.date.toString(ConfigurationManager.getManager().get(Setting.TIME_REGEX)),
 							values[0] +"",

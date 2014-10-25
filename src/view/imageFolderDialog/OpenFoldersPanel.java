@@ -7,6 +7,7 @@ import java.beans.PropertyChangeSupport;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Calendar;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
@@ -15,6 +16,7 @@ import javax.swing.JFileChooser;
 
 
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
@@ -95,16 +97,25 @@ public class OpenFoldersPanel extends JPanel implements ActionListener {
 					ArrayList<ImageDataModel> list = new ArrayList<ImageDataModel>();
 					
 					pcs.firePropertyChange(Measurer.SETMAX, null, new Integer(getSizeOfFiles()));
+					DateTime previous = (new DateTime()).withYear(0);
 					
 					int size = 0;
 					for ( int j = 0; j<files.size(); j++) {
 						for (int i = 0 ; i<files.get(j).length; i++) {
 							DateTime date = getDate(files.get(j)[i]);
+							
 							if(date != null) {
 								//TODO: Somehow tell the user how many invalid images was found.
+								System.out.println(date);
+								
 								list.add(new ImageDataModel(date, files.get(j)[i].getAbsolutePath()));
+								if(date.isBefore(previous)) {
+									//TODO: REFACTOR
+									JOptionPane.showMessageDialog(null, "The image order is not correct! This might cause problems for the excel writer. Error detected in " + files.get(j)[i].getName());
+								}
+								previous = date;
 							}
-						
+							
 							if(i % 30 == 0) {
 								pcs.firePropertyChange(Measurer.PROGRESS_UPDATE, null, new Integer(size+i));
 							}

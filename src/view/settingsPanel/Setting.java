@@ -24,7 +24,7 @@ public enum Setting {
 	TIME_COLUMN (new Integer(1), "Maximum hue"),
 	
 	DATE_REGEX ("dd/MM/yy", "Date regex"),
-	TIME_REGEX ("hh:mm:ss", "Time regex"),
+	TIME_REGEX ("HH:mm:ss", "Time regex"),
 	
 	SHOW_DATES (new Boolean(true), "Show dates"),
 	SHOW_STATUS (new Boolean(true), "Show status");

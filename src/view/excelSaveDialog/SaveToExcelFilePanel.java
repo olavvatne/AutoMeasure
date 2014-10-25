@@ -55,6 +55,7 @@ public class SaveToExcelFilePanel extends JPanel implements ActionListener {
 	
 	public void writeFile() {
 		if(this.saveFile != null ) {
+			boolean newFile = !this.saveFile.exists();
 			ExcelWriter writer = new ExcelWriter(this.saveFile, !this.saveFile.exists());
 			if(excelListener != null) {
 				writer.addPropertyChangeListener(excelListener);				
