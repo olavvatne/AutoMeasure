@@ -111,58 +111,50 @@ public class ExcelWriter {
 		for(ExcelModel measurement: data) {
 			DateTime measurementDate = measurement.getDate();
 			int i;
-			boolean ImageDateBefore = false;
-			boolean noDateForImage = false;
-			
-			System.out.println("-----------------------");
-			System.out.println("MEASUREMENTDATE" + measurementDate.toString());
+
 			pcs.firePropertyChange(Measurer.SETMAX, null, new Integer(excelLength));
 			for(i= excelIndex; i<excelLength; i++ ) {
+				DateTime excelDate = getDate(i);
 				
 				if(i % 50 == 0) {
 					pcs.firePropertyChange(Measurer.PROGRESS_UPDATE, null, new Integer(i));
 				}
 				
-				DateTime excelDate = getDate(i);
+				System.out.println("-----------------------");
+				System.out.println("Measurement" + measurementDate.toString(dateRegex + " " + timeRegex));
+				System.out.println("Excel" + excelDate.toString(dateRegex + " " + timeRegex));
 				if(measurementDate.isEqual(excelDate)) {
 					System.out.println("EQUAL");
 					
 					//Method for date added, but also for values only, to avoid magic numbers
 					setValueCells(measurement.getRowAsStringRow(), i);
+					excelIndex = i;
 					break;
 				}
 				else if(measurementDate.isBefore(excelDate)) {
 					System.out.println("measurement BEFORE exceldate");
-					System.out.println(excelDate.toString(dateRegex + " " + timeRegex));
-					System.out.println(measurementDate.toString(dateRegex + " " + timeRegex));
+					
 					//Think this is when measurementDate begins before excelDate. Important for when
 					//excelIndex == 0 and measurement is before exceldate
 					
 					if(excelIndex == 0) {
 						//the exceldate can be close, but better to skip it!
-						noDateForImage = true;
 						break;
 					}
-					ImageDateBefore = true;
+					else if(excelIndex >0) {
+						DateTime prev  = getDate(i-1);
+						//If measurementDate is dated after the previous excel date, and suddenly for the next excel date is dated before,
+						//there has happened a gap, and no no equal date found. Place value somewhere within.
+						if(measurementDate.isAfter(prev) || measurementDate.isEqual(prev)) {
+							setValueCells(measurement.getRowAsStringRow(), i);
+							excelIndex = i;
+							break;									
+						}
+					}
 				}
 				else {
 					System.out.println("measurement AFTER exceldate");
-					if(ImageDateBefore) {
-						//Image date is inbetween two excel dates
-						//TODO: (Set to the value after always.) is TEMP
-						//Should have a comparison of i and i-1 (if possible)
-						setValueCells(measurement.getRowAsStringRow(), i);
-						break;
-					}
-					else {
-						System.out.println("I ELSEN");
-						System.out.println(excelDate.toString());
-						System.out.println(measurementDate.toString());
-					}
 				}
-			}
-			if(!noDateForImage) {
-				excelIndex = i;				
 			}
 		}
 		
