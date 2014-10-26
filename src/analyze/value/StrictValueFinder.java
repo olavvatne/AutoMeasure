@@ -46,6 +46,8 @@ public class StrictValueFinder extends AbstractValueFinder {
 		IJ.run(imp, "8-bit", "");
 		IJ.run(imp, "Smooth", "");
 		IJ.run(imp, "Smooth", "");
+		IJ.run(imp, "Smooth", "");
+		IJ.run(imp, "Smooth", "");
 		IJ.setMinAndMax(imp, 126, 128);
 		IJ.setAutoThreshold(imp,"Default"); 
 		IJ.run(imp, "Convert to Mask", ""); 

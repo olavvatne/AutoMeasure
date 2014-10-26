@@ -97,7 +97,10 @@ public class ThreePhasePanel extends JPanel implements MouseListener, MouseMotio
 			this.model = model;
 			setValueLinesSelected(true);
 
-			if(model.getMarkers() == null) {
+			if(model.getMarkers() == null && ImageDataModel.SUGGESTED_MARKERS != null) {
+				this.model.setMarkers(ImageDataModel.SUGGESTED_MARKERS);
+			}
+			else if(model.getMarkers()== null && ImageDataModel.SUGGESTED_MARKERS == null) {
 				double[] markers = new double[4];
 				markers[Measurement.OG_HIGH] = this.windowWidth/5;
 				markers[Measurement.OG_LOW] = this.windowWidth/4;

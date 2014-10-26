@@ -72,13 +72,13 @@ public class MeasurementsPanel extends Viewer implements ActionListener {
         button.setToolTipText("Previous image in table");
         button.addActionListener(this);
         toolBar.add(button);
-        
+        /*Set shortcut that work*/
         button = new JButton("Next");
         button.setActionCommand(Measurer.NEXT);
         button.setToolTipText("Next image in the table");
         button.addActionListener(this);
         toolBar.add(button);
-        
+        /*Set shortcut that works!*/
         
 	}
 	

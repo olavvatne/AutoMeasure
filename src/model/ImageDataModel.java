@@ -31,7 +31,7 @@ public class ImageDataModel implements ExcelModel {
 	public static final int OW_LOW = 2;
 	public static final int OG_HIGH = 0;
 	public static final int OG_LOW = 1;
-	
+	public static List<ImageMarkerPoint> SUGGESTED_MARKERS;
 	public static int objects = 0;
 	
 	private Status status;
@@ -115,6 +115,7 @@ public class ImageDataModel implements ExcelModel {
 	
 	
 	public void setMarkers(List<ImageMarkerPoint> markers) {
+		this.SUGGESTED_MARKERS = markers;
 		this.markers = markers;
 	}
 
@@ -181,6 +182,7 @@ public class ImageDataModel implements ExcelModel {
 			ImageMarkerPoint p = new ImageMarkerPoint(markers2[i], 0, 0);
 			list.add(p);
 		}
+		SUGGESTED_MARKERS = list;
 		this.markers = list;
 		
 	}

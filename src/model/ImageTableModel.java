@@ -147,6 +147,7 @@ public class ImageTableModel extends AbstractTableModel implements PropertyChang
 	
 	public ImageDataModel getDataModel(int i) {
 		if(i<this.data.size()) {
+			//TODO: Set values for markers, if the measurement is not valid, only when opened.
 			return this.data.get(i);
 		}
 		else {

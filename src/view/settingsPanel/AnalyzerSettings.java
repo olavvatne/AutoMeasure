@@ -23,6 +23,8 @@ import automeasurer.ConfigurationManager;
 public class AnalyzerSettings extends BaseSettings implements ChangeListener, ActionListener {
 	private JSlider[] colorPicker1 = new JSlider[3];
 	private JSlider[] colorPicker2 = new JSlider[3];
+	private JLabel[] colorValues1 = new JLabel[3];
+	private JLabel[] colorValues2 = new JLabel[3];
 	private Setting[] colorConfig1 = new Setting[]{Setting.MIN_HUE,
 											Setting.MIN_SAT,
 											Setting.MIN_BRI};
@@ -53,11 +55,15 @@ public class AnalyzerSettings extends BaseSettings implements ChangeListener, Ac
 		for (int i = 0; i<colorPicker1.length; i++) {
 			label = new JLabel(colorConfig1[i].text());
 			this.add(label);
-			colorPicker1[i] = new JSlider(0, 255, config.getInt(colorConfig1[i]));
+			int value  = config.getInt(colorConfig1[i]);
+			colorPicker1[i] = new JSlider(0, 255, value);
 			colorPicker1[i].setPaintLabels(true);
 			colorPicker1[i].setMajorTickSpacing(255);
 			colorPicker1[i].addChangeListener(this);
 			this.add(colorPicker1[i]);
+			label = new JLabel(value + "");
+			this.colorValues1[i] = label;
+			this.add(label);
 		}
 		
 		minColor = new JPanel();
@@ -71,11 +77,15 @@ public class AnalyzerSettings extends BaseSettings implements ChangeListener, Ac
 		for (int i = 0; i<colorPicker2.length; i++) {
 			label = new JLabel(colorConfig2[i].text());
 			this.add(label);
-			colorPicker2[i] = new JSlider(0, 255, config.getInt(colorConfig2[i]));
+			int value  = config.getInt(colorConfig2[i]);
+			colorPicker2[i] = new JSlider(0, 255, value);
 			colorPicker2[i].setPaintLabels(true);
 			colorPicker2[i].setMajorTickSpacing(255);
 			colorPicker2[i].addChangeListener(this);
 			this.add(colorPicker2[i]);
+			label = new JLabel(value+"");
+			this.colorValues2[i] = label;
+			this.add(label);
 		}
 		
 		maxColor = new JPanel();
@@ -138,6 +148,12 @@ public class AnalyzerSettings extends BaseSettings implements ChangeListener, Ac
 	public void stateChanged(ChangeEvent e) {
 		setColor(minColor, colorPicker1);
 		setColor(maxColor, colorPicker2);
+		for(int i = 0; i< colorValues1.length; i++) {
+			colorValues1[i].setText(colorPicker1[i].getValue() + "");
+		}
+		for(int i = 0; i< colorValues2.length; i++) {
+			colorValues2[i].setText(colorPicker2[i].getValue() + "");
+		}
 	}
 	
 	/**
