@@ -5,6 +5,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
@@ -32,7 +34,7 @@ import model.Status;
  * @author Olav
  *
  */
-public class MeasurementsPanel extends Viewer implements ActionListener {
+public class MeasurementsPanel extends Viewer implements ActionListener, MouseListener {
 	ImageTableModel model;
 	private PropertyChangeSupport pcs; 
 	JCheckBox iterateSuccessful;
@@ -43,6 +45,7 @@ public class MeasurementsPanel extends Viewer implements ActionListener {
 		super(data);
 		this.model = model;
 		this.row = row;
+		this.addMouseListener(this);
 		JToolBar toolBar = new JToolBar();
         addButtons(toolBar);
         
@@ -167,5 +170,45 @@ public class MeasurementsPanel extends Viewer implements ActionListener {
 
 	private void saveChanges() {
 		this.threePhasePanel.close();
+	}
+
+
+	@Override
+	public void mouseClicked(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public void mouseEntered(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public void mouseExited(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public void mousePressed(MouseEvent e) {
+		System.out.println("TESTs");
+		//Middle button iterate to next picture, similar to next button
+		if( e.getButton() == MouseEvent.BUTTON2) {
+			this.iterateModel(Measurer.NEXT);
+			e.consume();
+		}
+	
+	}
+
+
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
 	}
 }

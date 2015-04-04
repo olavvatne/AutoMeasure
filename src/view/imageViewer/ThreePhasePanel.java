@@ -44,6 +44,7 @@ public class ThreePhasePanel extends JPanel implements MouseListener, MouseMotio
 	public static final int NR_OF_MARKERS =4;
 	public static final int NR_OF_VALUEPOINTS =2;
 	public static final int PADDING = 50;
+	public static final int CLICK_PADDING = 20;
 	
 	private static Color LIGHT_BLUE = new Color(38, 121, 255);
 	private static Color LIGHT_RED = new Color(225, 38, 38);
@@ -241,9 +242,12 @@ public class ThreePhasePanel extends JPanel implements MouseListener, MouseMotio
 		int padding = PADDING + ((offsetMarker) ? 300 : 0);
 		g.drawLine(pos, padding, pos, this.getHeight()-padding);
     	g.drawString(header, pos-20, padding -30);
-    	g.fillOval(pos-5, (this.getHeight()-60)/2, 10, 10);
+    	g.fillOval(pos-5, this.getOvalPos()-30, 10, 10);
 	}
 	
+	private int getOvalPos() {
+		return (this.getHeight())/2;
+	}
 	/**
 	 * Very similar to the paintLineSlider, but with no oval to indicate that its draggable.
 	 * @param g
@@ -280,16 +284,22 @@ public class ThreePhasePanel extends JPanel implements MouseListener, MouseMotio
 	 * of either OW or OG is set using setValueLineSelected.
 	 */
 	public void mousePressed(MouseEvent e) {
+		System.out.println("kkkkkk");
 		//hvis endring er enabled eller noe.
 		for(int i = 0; i<NR_OF_MARKERS; i ++) {
-			if(calc.getLinePos(i, true)-10 < e.getX() && e.getX()<calc.getLinePos(i, true) + 10) {
+			double line = calc.getLinePos(i, true);
+			int y = this.getOvalPos();
+			System.out.println(line);
+			if((line- CLICK_PADDING < e.getX() && e.getX()<line + CLICK_PADDING) && (y- CLICK_PADDING < e.getY() && e.getY()<y + CLICK_PADDING)) {
 				System.out.println(i + NR_OF_MARKERS + " SELECTED");
 				this.selected = i + NR_OF_MARKERS;
 			}
 		}
 
 		for(int i = 0; i<NR_OF_MARKERS; i ++) {
-			if(calc.getLinePos(i, false)-10 < e.getX() && e.getX()<calc.getLinePos(i, false) + 10) {
+			double line = calc.getLinePos(i, false);
+			int y = this.getOvalPos();
+			if((line-CLICK_PADDING < e.getX() && e.getX()<line + CLICK_PADDING) && (y- CLICK_PADDING < e.getY() && e.getY()<y + CLICK_PADDING)) {
 				this.selected = i;
 			}
 		}
@@ -318,6 +328,8 @@ public class ThreePhasePanel extends JPanel implements MouseListener, MouseMotio
 				}
 
 			}
+			
+			
 		}
 		this.repaint();
 	}
