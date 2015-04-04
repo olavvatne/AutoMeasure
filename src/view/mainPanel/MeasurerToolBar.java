@@ -92,7 +92,7 @@ public class MeasurerToolBar extends JToolBar {
 		button.addMouseListener(new MouseListener() {
 			public void mouseEntered(MouseEvent e) {
 		        JButton button = (JButton)e.getSource();
-		        setIconForButton(button, map.get(button)[HOVER_IMG], "test");
+		        setIconForButton(button, map.get(button)[HOVER_IMG], "");
 		    }
 
 			@Override
@@ -104,21 +104,21 @@ public class MeasurerToolBar extends JToolBar {
 			@Override
 			public void mouseExited(MouseEvent e) {
 				 JButton button = (JButton)e.getSource();
-			     setIconForButton(button, map.get(button)[NORMAL_IMG], "test");
+			     setIconForButton(button, map.get(button)[NORMAL_IMG], "");
 				
 			}
 
 			@Override
 			public void mousePressed(MouseEvent e) {
 				JButton button = (JButton)e.getSource();
-		        setIconForButton(button, map.get(button)[CLICK_IMG], "test");
+		        setIconForButton(button, map.get(button)[CLICK_IMG], "");
 				
 			}
 
 			@Override
 			public void mouseReleased(MouseEvent e) {
 				JButton button = (JButton)e.getSource();
-		        setIconForButton(button, map.get(button)[NORMAL_IMG], "test");
+		        setIconForButton(button, map.get(button)[NORMAL_IMG], "");
 				
 			}
 		});
