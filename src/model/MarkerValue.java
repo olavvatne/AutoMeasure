@@ -21,10 +21,10 @@ private static List<IntervalModel<Double>> markerValues = init();
 		//get some default values from store or something
 		List<IntervalModel<Double>> intervalList = new LinkedList<IntervalModel<Double>>();
 		List<Double> values = new ArrayList<Double>();
-			values.add(32.0);
-			values.add(0.0);
-			values.add(0.0);
-			values.add(32.0);
+			values.add(18.0);
+			values.add(1.0);
+			values.add(1.0);
+			values.add(18.0);
 		IntervalModel<Double> initialMarkerValue = new IntervalModel<Double>(0, values, Integer.MAX_VALUE);
 		intervalList.add(initialMarkerValue);
 		System.out.println("tester");
