@@ -23,6 +23,7 @@ import view.imageViewer.CalibratePanel;
 import view.imageViewer.Viewer;
 import model.ImageDataModel;
 import model.ImageTableModel;
+import utilities.SelectionListener;
 import analyze.Analyzer;
 import analyze.AnalyzerThreadsMonitor;
 import analyze.ImageMarkerFinder;
@@ -49,7 +50,8 @@ public class MainPanel extends JPanel implements ActionListener, PropertyChangeL
 		this.add(toolBar, BorderLayout.PAGE_START);
 		
 		InfoPanel infoPanel = new InfoPanel();
-		ImageTablePanel imageTablePanel = new ImageTablePanel(model);
+		SelectionListener l = (SelectionListener)infoPanel; //InfoPanel implements interface which will receive updates.
+		ImageTablePanel imageTablePanel = new ImageTablePanel(model, l);
 		
 		JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,
                 imageTablePanel, infoPanel);

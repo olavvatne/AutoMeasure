@@ -19,6 +19,7 @@ import automeasurer.Measurer;
 import view.imageViewer.MeasurementsPanel;
 import model.ImageDataModel;
 import model.ImageTableModel;
+import utilities.SelectionListener;
 /**
  * JPanel for displaying table inside a scroll window, containing a row for each image.
  * 
@@ -30,10 +31,12 @@ public class ImageTablePanel extends JPanel implements MouseListener, PropertyCh
 	private JTable imageTable;
 	private JScrollPane listScroll;
 	private ImagePopupMenu popup;
+	private SelectionListener SelectionLister; //TODO Use interface instead.
 	
-	public ImageTablePanel(ImageTableModel model) {
+	public ImageTablePanel(ImageTableModel model, SelectionListener infoPanel) {
 		this.setLayout(new BorderLayout());
 		this.model = model;
+		this.SelectionLister = infoPanel;
 		imageTable = new JTable();
 		imageTable.setModel(model);
 		imageTable.addMouseListener(this);
@@ -48,13 +51,17 @@ public class ImageTablePanel extends JPanel implements MouseListener, PropertyCh
 		this.setBorder(new EmptyBorder(new Insets(10, 10, 10, 10)));
 	}
 	
-	private void openMeasurementPanel(MouseEvent e) {
+	private TableElement getDataFromSelection() {
 		int rowInTable = imageTable.getSelectedRow();
 		int row = imageTable.convertRowIndexToModel(rowInTable);
-		//pass på memory leak?? Sjekk det ut senere
+		//TODO memoryleak? check out later
 		ImageDataModel data = this.model.getDataModel(row);
+		return new TableElement(row, data);
+	}
+	private void openMeasurementPanel(MouseEvent e) {
+		TableElement elem = this.getDataFromSelection();
 		JFrame frame = new JFrame();
-		MeasurementsPanel panel = new MeasurementsPanel(frame, data, model, row);
+		MeasurementsPanel panel = new MeasurementsPanel(frame, elem.data, model, elem.row);
 		panel.addChangeListener(this);
 		
 		Dimension sz = Toolkit.getDefaultToolkit().getScreenSize();
@@ -66,6 +73,10 @@ public class ImageTablePanel extends JPanel implements MouseListener, PropertyCh
 		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 	}
 	public void mousePressed(MouseEvent e) {
+		if (e.getClickCount() == 1) {
+			TableElement elem = this.getDataFromSelection();
+			this.SelectionLister.setSelection(elem.data);
+		}
 		if (e.getClickCount() == 2) {
 			openMeasurementPanel(e);
 		}
@@ -120,6 +131,14 @@ public class ImageTablePanel extends JPanel implements MouseListener, PropertyCh
 	}
 
 	
-	
+	private class TableElement {
+		    public int row;
+		    public ImageDataModel data;
+		    
+		    public TableElement(int row, ImageDataModel data) {
+		        this.row = row;
+		        this.data = data;
+		    }
+	}
 	
 }
