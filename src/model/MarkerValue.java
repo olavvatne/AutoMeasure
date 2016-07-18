@@ -4,10 +4,13 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+import automeasurer.ConfigurationManager;
+import view.settingsPanel.Setting;
+
 public class MarkerValue {
-private static List<IntervalModel<Double>> markerValues = init();
-	
-//TODO: MARKERVALUE AND OFFSET VERY SIMILAR. REFACTOR??
+	private static List<IntervalModel<Double>> markerValues = init();
+	private static ConfigurationManager manager = ConfigurationManager.getManager();
+	//TODO: MARKERVALUE AND OFFSET VERY SIMILAR. REFACTOR??
 	/**
 	 * Init for the static global variable.
 	 * It should retrieve default values from data store and put them into the IntervalModel
@@ -18,13 +21,16 @@ private static List<IntervalModel<Double>> markerValues = init();
 	 * @return A linked list of IntervalModels
 	 */
 	public static List<IntervalModel<Double>> init() {
-		//get some default values from store or something
+		//Stored minimum and maximum markers retrieved from store (or default if no value exist)
+		double lowerMarker = (double)ConfigurationManager.getManager().getInt(Setting.LOWER_MARKER);
+		double upperMarker = (double)ConfigurationManager.getManager().getInt(Setting.UPPER_MARKER);
+		
 		List<IntervalModel<Double>> intervalList = new LinkedList<IntervalModel<Double>>();
 		List<Double> values = new ArrayList<Double>();
-			values.add(18.0);
-			values.add(1.0);
-			values.add(1.0);
-			values.add(18.0);
+			values.add(upperMarker);
+			values.add(lowerMarker);
+			values.add(lowerMarker);
+			values.add(upperMarker);
 		IntervalModel<Double> initialMarkerValue = new IntervalModel<Double>(0, values, Integer.MAX_VALUE);
 		intervalList.add(initialMarkerValue);
 		System.out.println("tester");

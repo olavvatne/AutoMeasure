@@ -2,6 +2,7 @@ package view.settingsPanel;
 
 import java.awt.Color;
 
+//TODO: Maybe move to utilities. Not a view specific thing. Used in many places.
 /**
  * Enum for retrieving data from the configuration manager. 
  * Each enum has a default data attached to it, of the type
@@ -22,6 +23,9 @@ public enum Setting {
 	
 	DATE_COLUMN (new Integer(0), "Maximum hue"),
 	TIME_COLUMN (new Integer(1), "Maximum hue"),
+	
+	LOWER_MARKER (new Integer(1), "Lower marker"),
+	UPPER_MARKER (new Integer(18), "Upper Marker"),
 	
 	DATE_REGEX ("dd/MM/yy", "Date regex"),
 	TIME_REGEX ("HH:mm:ss", "Time regex"),

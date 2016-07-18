@@ -119,9 +119,14 @@ public class settingsPanel extends JPanel {
         tabbedPane.setMnemonicAt(1, KeyEvent.VK_2);
         
         BaseSettings gui = new GuiSettings();
-        tabbedPane.addTab("Gui options", null, gui,
-                "Does twice as much nothing");
-        tabbedPane.setMnemonicAt(1, KeyEvent.VK_2);
+        tabbedPane.addTab("GUI", null, gui,
+                "GUI options");
+        tabbedPane.setMnemonicAt(2, KeyEvent.VK_3);
+        
+        BaseSettings measuring = new MeasurementSettings();
+        tabbedPane.addTab("Measurement", null, measuring,
+                "Measurement options");
+        tabbedPane.setMnemonicAt(3, KeyEvent.VK_4);
         
         JButton saveButton = new JButton("Save");
         saveButton.addActionListener(new ActionListener() {
