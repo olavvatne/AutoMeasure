@@ -128,7 +128,15 @@ public class ExcelWriter {
 		for(ExcelModel measurement: data) {
 			DateTime measurementDate = measurement.getDate();
 			boolean recorded = false;
-
+			
+			
+			if (excelIndex == 0) {
+				prevExcelDate = null;
+			}
+			else {
+				prevExcelDate = getDate(excelIndex-1);
+			}
+			
 			pcs.firePropertyChange(Measurer.SETMAX, null, new Integer(excelLength));
 			for(int i= excelIndex; i<excelLength; i++ ) {
 				DateTime excelDate = getDate(i);
@@ -137,10 +145,10 @@ public class ExcelWriter {
 					pcs.firePropertyChange(Measurer.PROGRESS_UPDATE, null, new Integer(i));
 				}
 				
-				//System.out.println("-----------------------");
-				//System.out.println("Measurement " + measurementDate.toString(dateRegex + " " + timeRegex));
+				System.out.println("-----------------------");
+				System.out.println("Measurement " + measurementDate.toString(dateRegex + " " + timeRegex));
 				if (excelDate != null) {
-					//System.out.println("Excel " + excelDate.toString(dateRegex + " " + timeRegex));
+					System.out.println("Excel " + excelDate.toString(dateRegex + " " + timeRegex));
 				
 					if(measurementDate.isEqual(excelDate)) {
 						System.out.println("EQUAL");
@@ -156,6 +164,8 @@ public class ExcelWriter {
 							//Does nothing to gaps in excel without dates where measurement falls between exceldate on either side of gap.
 							//there has happened a gap, and no no equal date found. Place value somewhere within.
 							if(measurementDate.isAfter(prevExcelDate) && measurementDate.isBefore(excelDate)) {
+								System.out.println("INBETWEEN");
+								System.out.println(prevExcelDate.toString(dateRegex + " " + timeRegex));
 								setValueCells(measurement.getRowAsStringRow(), i);
 								excelIndex = i;
 								recorded = true;
