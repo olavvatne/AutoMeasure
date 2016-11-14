@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Added
 - Warning message if some measurements have not been stored in file.
+- Markings high low in settings panel
 
 [Unreleased]: https://github.com/olivierlacan/keep-a-changelog/compare/v1.1.0...HEAD
 [1.1.0]: https://github.com/olivierlacan/keep-a-changelog/compare/v1.0.0...v1.1.0
