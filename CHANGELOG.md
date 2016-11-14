@@ -14,4 +14,4 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Warning message if some measurements have not been stored in file.
 
 [Unreleased]: https://github.com/olivierlacan/keep-a-changelog/compare/v1.1.0...HEAD
-[0.0.2]: https://github.com/olivierlacan/keep-a-changelog/compare/v1.0.0...v1.1.0
+[0.0.1]: https://github.com/olivierlacan/keep-a-changelog/compare/v1.0.0...v1.1.0
