@@ -34,6 +34,7 @@ public class Measurer {
 	public static final String ANALYZE_IMAGE = "analyzeImage";
 	public static final String SETMAX = "setmax";
 	public static final String FINISHED = "finished";
+	public static final String NOT_RECORDED = "notrecorded";
 	public static final String PROGRESS_UPDATE = "progress";
 	public static final String CALIBRATE = "calibrate";
 	public static final String NEXT = "next";

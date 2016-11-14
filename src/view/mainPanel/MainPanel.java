@@ -96,7 +96,8 @@ public class MainPanel extends JPanel implements ActionListener, PropertyChangeL
         else if (Measurer.SAVE.equals(cmd)) 
         { 
         	SaveToExcelFilePanel dialog = new SaveToExcelFilePanel(model.getDataModel());
-        	dialog.setPropertyChangeListener(progress);
+        	dialog.addPropertyChangeListener(progress);
+        	dialog.addPropertyChangeListener(this);
         	int option = JOptionPane.showConfirmDialog(this ,dialog, "Excel dialog", JOptionPane.OK_CANCEL_OPTION);
             if(option == JOptionPane.OK_OPTION) {
             	dialog.writeFile();
@@ -147,6 +148,11 @@ public class MainPanel extends JPanel implements ActionListener, PropertyChangeL
 
 	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
-		
+		if(evt.getPropertyName().equals(Measurer.NOT_RECORDED)) {
+
+			String s = (Integer)evt.getNewValue() + " measurements were not recorded.\n This is most likely caused by the measurements \n happening "
+			+ "before the first date in the excel file or after the last date in the excel file.";
+			JOptionPane.showMessageDialog(this, s, "Measurements not recorded", JOptionPane.WARNING_MESSAGE);
+		}
 	}
 }

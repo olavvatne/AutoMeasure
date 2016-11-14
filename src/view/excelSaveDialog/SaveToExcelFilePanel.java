@@ -6,6 +6,7 @@ import java.awt.event.ActionListener;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JButton;
@@ -25,7 +26,7 @@ public class SaveToExcelFilePanel extends JPanel implements ActionListener {
 	private List<ExcelModel> model;
 	private File saveFile = null;
 	private final static String HELP_TEXT = "Either open exisiting timestamp excel file, or save as new file. The former will match measurement date with timestamps in file."; 
-	private PropertyChangeListener excelListener;
+	private ArrayList<PropertyChangeListener> excelListener = new ArrayList<PropertyChangeListener>();
 	
 	public SaveToExcelFilePanel(List<ExcelModel> model) {
 		Dimension d = new Dimension(300, 200);
@@ -72,8 +73,8 @@ public class SaveToExcelFilePanel extends JPanel implements ActionListener {
 		if(this.saveFile != null ) {
 			boolean newFile = !this.saveFile.exists();
 			ExcelWriter writer = new ExcelWriter(this.saveFile, !this.saveFile.exists());
-			if(excelListener != null) {
-				writer.addPropertyChangeListener(excelListener);				
+			for(PropertyChangeListener listener:excelListener) {
+				writer.addPropertyChangeListener(listener);				
 			}
 			writer.writeExcelFile(this.model);
 		}	
@@ -85,7 +86,7 @@ public class SaveToExcelFilePanel extends JPanel implements ActionListener {
 		}
 	}
 	
-	public void setPropertyChangeListener(PropertyChangeListener listener) {
-		excelListener = listener;
+	public void addPropertyChangeListener(PropertyChangeListener listener) {
+		excelListener.add(listener);
 	}
 }

@@ -40,6 +40,7 @@ public class ProgressPanel extends JPanel implements PropertyChangeListener {
 			this.progress.setMaximum((Integer)evt.getNewValue());
 		}
 		else if(evt.getPropertyName().equals(Measurer.FINISHED)) {
+			System.out.println("Finished with operation");
 			this.progress.setValue(0);
 		}
 	}

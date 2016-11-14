@@ -102,62 +102,77 @@ public class ExcelWriter {
 	 * 
 	 * NOTE: THe method assumes that the excelModel list is sorted in chronological order. 
 	 * 
+	 * First Excel date and first measurement:
+		 * Measurement is equal to excel date:
+		 	- Record measurement at that row
+		 * Measurement happened before excel date:
+		 *  - No recource. All later dates will have same outcome.
+		 * Measurement happened after excel date:
+		 * 	- Go to next excel date
+	 * 
+	 * Second Excel date and a measurement:
+	 *  Measurement is equal to excel date:
+	 *    - Record measurement at that row
+	 * 	Measurement happened before excel date:
+	 *   - If measurement happened after previous excel date, record inbetween
+	 *  Measurement happened after excel date:
+	 *  - Go to next excel date.
 	 * @param data List of objects implementing ExcelModel interface.
 	 */
 	private void writeToFileWithDates(List<ExcelModel> data) {
 		int excelIndex = 0;
+		int nrNotRecorded = 0;
+		DateTime prevExcelDate = null;
 		int excelLength = sheet.getRows();
 		
 		for(ExcelModel measurement: data) {
 			DateTime measurementDate = measurement.getDate();
-			int i;
+			boolean recorded = false;
 
 			pcs.firePropertyChange(Measurer.SETMAX, null, new Integer(excelLength));
-			for(i= excelIndex; i<excelLength; i++ ) {
+			for(int i= excelIndex; i<excelLength; i++ ) {
 				DateTime excelDate = getDate(i);
 				
 				if(i % 50 == 0) {
 					pcs.firePropertyChange(Measurer.PROGRESS_UPDATE, null, new Integer(i));
 				}
 				
-				System.out.println("-----------------------");
-				System.out.println("Measurement" + measurementDate.toString(dateRegex + " " + timeRegex));
-				System.out.println("Excel" + excelDate.toString(dateRegex + " " + timeRegex));
-				if(measurementDate.isEqual(excelDate)) {
-					System.out.println("EQUAL");
-					
-					//Method for date added, but also for values only, to avoid magic numbers
-					setValueCells(measurement.getRowAsStringRow(), i);
-					excelIndex = i;
-					break;
-				}
-				else if(measurementDate.isBefore(excelDate)) {
-					System.out.println("measurement BEFORE exceldate");
-					
-					//Think this is when measurementDate begins before excelDate. Important for when
-					//excelIndex == 0 and measurement is before exceldate
-					
-					if(excelIndex == 0) {
-						//the exceldate can be close, but better to skip it!
+				//System.out.println("-----------------------");
+				//System.out.println("Measurement " + measurementDate.toString(dateRegex + " " + timeRegex));
+				if (excelDate != null) {
+					//System.out.println("Excel " + excelDate.toString(dateRegex + " " + timeRegex));
+				
+					if(measurementDate.isEqual(excelDate)) {
+						System.out.println("EQUAL");
+						
+						//Method for date added, but also for values only, to avoid magic numbers
+						setValueCells(measurement.getRowAsStringRow(), i);
+						excelIndex = i;
+						recorded = true;
 						break;
 					}
-					else if(excelIndex >0) {
-						DateTime prev  = getDate(i-1);
-						//If measurementDate is dated after the previous excel date, and suddenly for the next excel date is dated before,
-						//there has happened a gap, and no no equal date found. Place value somewhere within.
-						if(measurementDate.isAfter(prev) || measurementDate.isEqual(prev)) {
-							setValueCells(measurement.getRowAsStringRow(), i);
-							excelIndex = i;
-							break;									
+					else {
+						if (prevExcelDate != null) {
+							//Does nothing to gaps in excel without dates where measurement falls between exceldate on either side of gap.
+							//there has happened a gap, and no no equal date found. Place value somewhere within.
+							if(measurementDate.isAfter(prevExcelDate) && measurementDate.isBefore(excelDate)) {
+								setValueCells(measurement.getRowAsStringRow(), i);
+								excelIndex = i;
+								recorded = true;
+								break;									
+							}
 						}
 					}
 				}
-				else {
-					System.out.println("measurement AFTER exceldate");
-				}
+				prevExcelDate = excelDate;
+			}
+			if(!recorded) {
+				nrNotRecorded += 1;
 			}
 		}
-		
+		if (nrNotRecorded>0) {
+			pcs.firePropertyChange(Measurer.NOT_RECORDED, null, new Integer(nrNotRecorded));
+		}
 		pcs.firePropertyChange(Measurer.FINISHED, null, null);
 	}
 	
@@ -177,8 +192,7 @@ public class ExcelWriter {
 			return result.minuteOfDay().roundFloorCopy();
 			//return new SimpleDateFormat(this.dateRegex).parse(datetime);
 		} catch (Exception e) {
-			//TODO: Notify the user at least the first time, and suggest course of action.
-			e.printStackTrace();
+			//e.printStackTrace();
 			return null;
 		}
 	}
