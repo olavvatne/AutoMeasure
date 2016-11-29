@@ -54,8 +54,8 @@ public class SaveToExcelFilePanel extends JPanel implements ActionListener {
 		
 		fc.setFileFilter(new ExcelFilter());
 
-		
-		int returnVal = fc.showSaveDialog(this);
+		fc.setDialogTitle("Selct existing or save new excel file.");
+		int returnVal = fc.showDialog(this, "Save");
 		if (returnVal == JFileChooser.APPROVE_OPTION) {
 			file = fc.getSelectedFile();
 			
