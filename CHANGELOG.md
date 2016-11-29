@@ -5,6 +5,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+- Error dialogs in ExcelWriter
+
 ## [1.1.0] - 2016-14-11
 
 ### Changed
