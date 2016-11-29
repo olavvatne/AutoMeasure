@@ -6,6 +6,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
+import javax.swing.JOptionPane;
+
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
@@ -45,7 +47,6 @@ public class ExcelWriter {
 	 * A new file has to be created, and inserted when initializing an ExcelWriter.
 	 * 
 	 * TODO: NO date placement yet
-	 * TODO: throw expections, and not handle here. Should be handled by view. Show text or something.
 	 * @param excelFileWithDates 
 	 */
 	public ExcelWriter(File file, boolean newFile) {
@@ -57,7 +58,7 @@ public class ExcelWriter {
 				
 				//sheet = workbook.getSheet(FIRST_EXCEL_SHEET);
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
+				showErrorMessage(e.getMessage());
 				e.printStackTrace();
 			}			
 		}
@@ -70,10 +71,10 @@ public class ExcelWriter {
 				sheet = workbook.getSheet(FIRST_EXCEL_SHEET);
 				System.out.println(sheet.getCell(0, 0).getContents());
 			} catch (BiffException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
+				showErrorMessage(e.getMessage());
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
+				showErrorMessage(e.getMessage());
 				e.printStackTrace();
 			}
 		}
@@ -237,12 +238,16 @@ public class ExcelWriter {
 			workbook.write();
 			workbook.close();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
+			showErrorMessage(e.getMessage());
 			e.printStackTrace();
 		} catch (WriteException e) {
-			// TODO Auto-generated catch block
+			showErrorMessage(e.getMessage());
 			e.printStackTrace();
 		}
+	}
+	
+	private void showErrorMessage(String message) {
+		JOptionPane.showMessageDialog(null, message, "Error occured", JOptionPane.WARNING_MESSAGE);
 	}
 	
 	/**

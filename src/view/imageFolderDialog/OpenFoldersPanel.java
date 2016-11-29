@@ -41,7 +41,7 @@ import filter.ImageFilter;
  */
 public class OpenFoldersPanel extends JPanel implements ActionListener {
 	
-	/*fikse alt som har med listene å gjøre*/
+	/*fikse alt som har med listene ï¿½ gjï¿½re*/
 	
 	public ArrayList<File[]> files = new ArrayList<File[]>();
 	private byte counter = 1;
@@ -128,11 +128,11 @@ public class OpenFoldersPanel extends JPanel implements ActionListener {
 				}
 			};
 			work.start();
-			//sjekke sortering. Må legges til i rekkefølge
+			//sjekke sortering. Mï¿½ legges til i rekkefï¿½lge
 			
 		}
 		else {
-			//funket ikke . feilmelding
+			JOptionPane.showMessageDialog(null, "No images in folder.", "Error", JOptionPane.WARNING_MESSAGE);
 			
 		}
 	}
@@ -149,7 +149,7 @@ public class OpenFoldersPanel extends JPanel implements ActionListener {
 			return null;
 		}
 
-		//nullpointer exception må håndtere når filer ikke inneholder metadata!
+		//nullpointer exception mï¿½ hï¿½ndtere nï¿½r filer ikke inneholder metadata!
 		if(metadata != null) {
 			ExifSubIFDDirectory directory = metadata.getDirectory(ExifSubIFDDirectory.class);
 			DateTime date = null;
