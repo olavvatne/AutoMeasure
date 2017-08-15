@@ -14,3 +14,8 @@ hs_err_pid*
 .setting
 jar
 /bin/
+
+# Maven Eclipse
+.classpath
+.settings/
+/target
