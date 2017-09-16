@@ -88,12 +88,50 @@ public class ExcelWriter {
 	 */
 	public void writeExcelFile(List<ExcelModel> data) {
 		if(this.fileContainDates) {
+			boolean userWantToProceedOrNoIssue = testExcelFile();
+			if (!userWantToProceedOrNoIssue) {
+				return;
+			}
 			writeToFileWithDates(data);
 		}
 		else {
 			writeToFileWithNoDates(data);
 		}
 		closeAndWriteExcel();
+	}
+	
+	// File is sampled. Exceptions reading the date and time row might happen because there are empty rows etc.
+	// Test will at least warn the user about any exceptions that happens in the first 50 lines or so.
+	private boolean testExcelFile() {
+		int numberOfChecks = 50;
+		int excelLength = sheet.getRows() < numberOfChecks ? sheet.getRows() : numberOfChecks;
+		int nullDates = 0;
+		String firstInvalidDate = "";
+		
+		for(int i= 0; i<excelLength; i++ ) {
+			DateTime excelDate = getDate(i);
+			if (excelDate == null) {
+				if (nullDates == 0) {
+					String date = sheet.getWritableCell(dateColumn, i).getContents().trim();
+					String time = sheet.getWritableCell(timeColumn, i).getContents().trim();
+					firstInvalidDate = date + " " + time;
+				}
+				nullDates += 1;
+			}
+		}
+		
+		// Had issues parsing at least one row. Indicates that the date formatting might be wrong.
+		if (nullDates > 0) {
+			String warningMsg = "Testing some of the rows revealed a potential issue with the"
+					+ " date and time columns. Could not parse " + nullDates 
+					+ " dates of the "  + excelLength + " number of rows tested."
+					+ "\n Do you want to proceed?"; 
+			int dialogResult = JOptionPane.showConfirmDialog(null, warningMsg, "Potential issue with excel file", JOptionPane.YES_NO_OPTION);
+			if (dialogResult == JOptionPane.NO_OPTION) {
+				return false;
+			}
+		}
+		return true;
 	}
 	
 	/**

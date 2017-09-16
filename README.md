@@ -5,6 +5,10 @@ The autoMeasure is a program for automating inputting measurements taken from re
 
 Automeasure provide an user interface, for opening image folders, configuring the image analyzer, manually change measurements and monitoring. The resulting measurements can be saved to a new excel file, or an existing excel file can be updated to include measurements.
 
+## Release checklist
+* Update Changelog
+* Increase version number
+* Push and create tag on GitHub
 ## Screenshots
 ![Measure window](../screenshots/measurer.png)
 
